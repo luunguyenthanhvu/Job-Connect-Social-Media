@@ -7,7 +7,7 @@ spring:
   application:
     name: user-service
   datasource:
-    url: "jdbc:mysql://localhost:3306/job-social-media_user-service"
+    url: "jdbc:mysql://localhost:3306/job-csm-user-service"
     driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
     password: 12345678
