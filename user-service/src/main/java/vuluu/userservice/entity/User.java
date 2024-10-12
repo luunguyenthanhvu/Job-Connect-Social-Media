@@ -1,14 +1,14 @@
 package vuluu.userservice.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
+import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,6 +25,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity(name = "User")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 
   @Id
@@ -45,10 +46,16 @@ public class User {
   @Builder.Default
   boolean verified = false;
 
+  @Column(name = "description")
+  String description;
+
+  @Column(name = "created_date")
+  LocalDateTime createdDate;
+
+  @Column(name = "img")
+  String img;
+
   @ManyToMany
   Set<Role> roles;
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
-  UserDetail userDetail;
 }
