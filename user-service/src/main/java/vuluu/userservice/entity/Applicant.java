@@ -35,4 +35,6 @@ public class Applicant extends User {
   @Column(name = "cv_Link")
   String cvLink;
 
+  @Column(name = "skills")
+  String skill;
 }

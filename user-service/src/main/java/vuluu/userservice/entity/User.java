@@ -39,7 +39,7 @@ public class User {
   @Column(name = "password")
   String password;
 
-  @Column(name = "email")
+  @Column(name = "email", unique = true)
   String email;
 
   @Column(name = "verified")
