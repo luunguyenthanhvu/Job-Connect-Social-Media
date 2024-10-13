@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import java.util.Set;
@@ -26,9 +28,13 @@ import vuluu.userservice.enums.ERole;
 public class Role {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "roleId")
+  int roleId;
+
+  @Column(name = "roleName")
   @Enumerated(EnumType.STRING)
-  ERole roleId;
+  ERole roleName;
 
   @Column(name = "description")
   String description;
