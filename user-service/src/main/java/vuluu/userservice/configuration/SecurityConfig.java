@@ -26,27 +26,29 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  String[] PUBLIC_ENDPOINTS = {"/test"};
+  String[] PUBLIC_ENDPOINTS = {"/users/registration","/test1/test2"};
 
   CustomJwtDecoder customJwtDecoder;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-    httpSecurity.authorizeHttpRequests(
-        request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
-            .permitAll()
-            .anyRequest()
-            .authenticated());
-
-    httpSecurity.oauth2ResourceServer(
-        oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)
-                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-            .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
-
-    httpSecurity.csrf(AbstractHttpConfigurer::disable);
+    httpSecurity
+        .csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+            .anyRequest().authenticated()
+        )
+        .oauth2ResourceServer(oauth2 -> oauth2
+            .jwt(jwtConfigurer -> jwtConfigurer
+                .decoder(customJwtDecoder)
+                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+            )
+            .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+        );
 
     return httpSecurity.build();
   }
+
 
   @Bean
   JwtAuthenticationConverter jwtAuthenticationConverter() {
