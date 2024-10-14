@@ -8,11 +8,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.ManyToMany;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +28,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity(name = "User")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User {
+public class User implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -50,7 +52,8 @@ public class User {
   String description;
 
   @Column(name = "created_date")
-  LocalDateTime createdDate;
+  @Default
+  LocalDateTime createdDate = LocalDateTime.now();
 
   @Column(name = "img")
   String img;

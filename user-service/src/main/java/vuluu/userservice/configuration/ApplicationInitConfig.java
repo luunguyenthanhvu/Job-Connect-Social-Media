@@ -47,22 +47,25 @@ public class ApplicationInitConfig {
       RoleRepository roleRepository) {
     log.info("Initializing application....");
     return args -> {
-      if (userRepository.findByEmail(ADMIN_EMAIL).isPresent()) {
+      if (!userRepository.findByEmail(ADMIN_EMAIL).isPresent()) {
 
         Role adminRole = roleRepository.save(Role
             .builder()
+            .roleId(ERole.ADMIN)
             .roleName(ERole.ADMIN)
             .description("Admin role")
             .build());
 
         roleRepository.save(Role
             .builder()
+            .roleId(ERole.EMPLOYER)
             .roleName(ERole.EMPLOYER)
             .description("Employer role")
             .build());
 
         roleRepository.save(Role
             .builder()
+            .roleId(ERole.USER)
             .roleName(ERole.USER)
             .description("User role")
             .build());
