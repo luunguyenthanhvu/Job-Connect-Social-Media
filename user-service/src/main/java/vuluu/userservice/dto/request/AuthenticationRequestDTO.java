@@ -6,9 +6,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Data
@@ -16,15 +14,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateAccountRequestDTO {
-
-  @Size(min = 4, message = "USERNAME_INVALID")
-  String username;
+public class AuthenticationRequestDTO {
 
   @Email
   String email;
-
   @Size(min = 6, message = "INVALID_PASSWORD")
   String password;
-
 }

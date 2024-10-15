@@ -1,5 +1,7 @@
-package vuluu.userservice.service.impl;
+package vuluu.userservice.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vuluu.userservice.dto.request.AccountVerifyRequestDTO;
 import vuluu.userservice.dto.request.CreateAccountRequestDTO;
+import vuluu.userservice.dto.response.MessageResponseDTO;
 import vuluu.userservice.dto.response.UserResponseDTO;
 import vuluu.userservice.entity.Role;
 import vuluu.userservice.entity.User;
@@ -18,18 +22,19 @@ import vuluu.userservice.exception.ErrorCode;
 import vuluu.userservice.mapper.UserMapper;
 import vuluu.userservice.repository.RoleRepository;
 import vuluu.userservice.repository.UserRepository;
-import vuluu.userservice.service.templates.IUserService;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class UserService implements IUserService {
+public class UserService {
 
   UserRepository userRepository;
   RoleRepository roleRepository;
   PasswordEncoder passwordEncoder;
   UserMapper userMapper;
+
+  String VERIFY_SUCCESS = "Your Account is verify.";
 
   @Transactional
   public UserResponseDTO createUser(CreateAccountRequestDTO requestDTO) {
@@ -47,6 +52,26 @@ public class UserService implements IUserService {
     user = userRepository.save(user);
 
     return userMapper.toUserResponseDTO(user);
+  }
+
+  @Transactional
+  public MessageResponseDTO verifyAccount(AccountVerifyRequestDTO requestDTO) {
+    var user = userRepository.findByEmail(requestDTO.getEmail())
+        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+    LocalDateTime current = LocalDateTime.now();
+
+    Duration duration = Duration.between(user.getCreatedDate(), current);
+
+    if (duration.toMinutes() <= 30 && user.getVerifyCode().equals(requestDTO.getCode())) {
+      user.setVerified(true);
+      userRepository.save(user);
+      return MessageResponseDTO.builder().message(VERIFY_SUCCESS).build();
+    } else {
+      // resend code
+    }
+
+    throw new AppException(ErrorCode.VERIFY_TIME_OUT);
   }
 
 }

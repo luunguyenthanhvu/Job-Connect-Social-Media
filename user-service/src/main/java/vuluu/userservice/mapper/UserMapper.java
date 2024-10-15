@@ -17,6 +17,7 @@ public interface UserMapper {
   @Mapping(target = "createdDate", ignore = true)
   @Mapping(target = "img", ignore = true)
   @Mapping(target = "roles", ignore = true)
+  @Mapping(target = "verifyCode", ignore = true)
   User toUser(CreateAccountRequestDTO requestDTO);
 
   @Mapping(target = "id", source = "id")
@@ -25,7 +26,6 @@ public interface UserMapper {
   UserResponseDTO toUserResponseDTO(User user);
 
   @Mapping(target = "permissionResponseDTOS", ignore = true)
-    // Ignore if it doesn't exist in Role
   RoleResponseDTO toRoleResponseDTO(Role role);
 }
 

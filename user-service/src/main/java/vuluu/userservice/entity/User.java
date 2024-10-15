@@ -48,6 +48,9 @@ public class User implements Serializable {
   @Builder.Default
   boolean verified = false;
 
+  @Column(name = "verifyCode")
+  String verifyCode;
+
   @Column(name = "description")
   String description;
 

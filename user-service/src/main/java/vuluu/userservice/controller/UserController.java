@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import vuluu.userservice.dto.request.AccountVerifyRequestDTO;
 import vuluu.userservice.dto.request.CreateAccountRequestDTO;
 import vuluu.userservice.dto.response.ApiResponse;
+import vuluu.userservice.dto.response.MessageResponseDTO;
 import vuluu.userservice.dto.response.UserResponseDTO;
-import vuluu.userservice.service.impl.UserService;
+import vuluu.userservice.service.UserService;
 
 @RestController
 @RequestMapping("/users")
@@ -28,4 +30,12 @@ public class UserController {
     return ApiResponse.<UserResponseDTO>builder()
         .result(userService.createUser(requestDTO)).build();
   }
+
+  @PostMapping("/verify")
+  ApiResponse<MessageResponseDTO> verifyAccount(
+      @RequestBody @Valid AccountVerifyRequestDTO requestDTO) {
+    return ApiResponse.<MessageResponseDTO>builder()
+        .result(userService.verifyAccount(requestDTO)).build();
+  }
+
 }
