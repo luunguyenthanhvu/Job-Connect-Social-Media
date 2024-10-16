@@ -1,0 +1,25 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /notification-service
+
+app:
+  name: "Job connect social media"
+  email: "luunguuenthanhvu123@gmail.com"
+  bravo:
+    api-key: "C:\\Users\\PC\\secret_key\\bravo-api-key.pem"
+spring:
+  application:
+    name: notification-service
+
+  kafka:
+    bootstrap-servers: "${HOST_IP_ADDRESS:localhost}:19092,${HOST_IP_ADDRESS:localhost}:29092,${HOST_IP_ADDRESS:localhost}:39092"
+    consumer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      auto-offset-reset: earliest
+      group-id: notification-group
+      properties:
+        spring.json.value.default.type: vuluu.notificationservice.dto.request.SendEmailRequestDTO
+    topics:
+      user-register: USER_REGISTER
