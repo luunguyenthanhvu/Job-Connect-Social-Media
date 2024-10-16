@@ -1,0 +1,26 @@
+server:
+  port: 8888
+
+app:
+  api-prefix: /api
+  strip-prefix: 1
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+      - id: user-service
+        uri: http://localhost:8081
+        predicates:
+          - Path=${app.api-prefix}/user-service/**
+        filters:
+          - StripPrefix=${app.strip-prefix}
+
+      - id: notification-service
+        uri: http://localhost:8082
+        predicates:
+          - Path=${app.api-prefix}/notification-service/**
+        filters:
+          - StripPrefix=${app.strip-prefix}

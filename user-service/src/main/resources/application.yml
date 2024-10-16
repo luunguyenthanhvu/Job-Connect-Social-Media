@@ -1,0 +1,30 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /user-service
+
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: "jdbc:mysql://localhost:3306/job-csm-user-service"
+    driverClassName: "com.mysql.cj.jdbc.Driver"
+    username: root
+    password: 12345678
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  kafka:
+    bootstrap-servers: "${HOST_IP_ADDRESS:localhost}:19092,${HOST_IP_ADDRESS:localhost}:29092,${HOST_IP_ADDRESS:localhost}:39092"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      auto-offset-reset: earliest
+jwt:
+  signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
+
+
