@@ -1,4 +1,4 @@
-package vuluu.notificationservice.dto.request;
+package vuluu.userservice.dto.request;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,10 +12,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SendEmailRequestDTO {
+public class SendTo {
 
-
-  SendTo to;
-  String subject;
-  String code;
+  String name;
+  String email;
 }

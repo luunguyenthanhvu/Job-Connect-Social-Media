@@ -1,0 +1,42 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.4.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 2181:2181
+    restart: "on-failure"
+
+  broker-1:
+    image: confluentinc/cp-server:5.4.0
+    container_name: broker1
+    depends_on:
+      - zookeeper
+    ports:
+      - "19092:19092"
+    restart: "on-failure"
+    env_file:
+      - ./broker-1.env
+
+  broker-2:
+    image: confluentinc/cp-server:5.4.0
+    container_name: broker2
+    depends_on:
+      - zookeeper
+    ports:
+      - "29092:29092"
+    restart: "on-failure"
+    env_file:
+      - broker-2.env
+  broker-3:
+    image: confluentinc/cp-server:5.4.0
+    container_name: broker3
+    depends_on:
+      - zookeeper
+    ports:
+      - "39092:39092"
+    restart: "on-failure"
+    env_file:
+      - broker-3.env
+version: '2.1'

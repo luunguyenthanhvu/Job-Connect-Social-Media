@@ -1,4 +1,4 @@
-package vuluu.notificationservice.dto.request;
+package vuluu.userservice.dto.request;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

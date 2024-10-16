@@ -22,6 +22,8 @@ import vuluu.userservice.exception.ErrorCode;
 import vuluu.userservice.mapper.UserMapper;
 import vuluu.userservice.repository.RoleRepository;
 import vuluu.userservice.repository.UserRepository;
+import vuluu.userservice.service.kafka_producer.EmailProducer;
+import vuluu.userservice.util.MyUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +35,7 @@ public class UserService {
   RoleRepository roleRepository;
   PasswordEncoder passwordEncoder;
   UserMapper userMapper;
-
+  EmailProducer emailProducer;
   String VERIFY_SUCCESS = "Your Account is verify.";
 
   @Transactional
@@ -50,6 +52,13 @@ public class UserService {
 
     user.setRoles(roles);
     user = userRepository.save(user);
+
+    // generate verify code
+    String code = MyUtils.generateVerificationCode();
+    user.setVerifyCode(code);
+
+    // using kafka to send email to notification service
+    emailProducer.sendEmail(user);
 
     return userMapper.toUserResponseDTO(user);
   }
