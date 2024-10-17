@@ -1,14 +1,17 @@
 package vuluu.userservice.mapper;
 
+import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 import vuluu.userservice.dto.request.CreateAccountRequestDTO;
 import vuluu.userservice.dto.response.RoleResponseDTO;
 import vuluu.userservice.dto.response.UserResponseDTO;
 import vuluu.userservice.entity.Role;
 import vuluu.userservice.entity.User;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
+    builder = @Builder(disableBuilder = true))
 public interface UserMapper {
 
   @Mapping(target = "id", ignore = true)
