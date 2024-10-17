@@ -1,11 +1,10 @@
-package vuluu.userservice.configuration;
+package vuluu.identityservice.configuration;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,7 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  String[] PUBLIC_ENDPOINTS = {"/auth/token","/auth/registration", "/auth/verify"};
+  String[] PUBLIC_ENDPOINTS = {"/identity/introspect"};
 
   CustomJwtDecoder customJwtDecoder;
 
@@ -53,7 +52,7 @@ public class SecurityConfig {
   @Bean
   JwtAuthenticationConverter jwtAuthenticationConverter() {
     JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-    jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
+    jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
 
     JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
     jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);

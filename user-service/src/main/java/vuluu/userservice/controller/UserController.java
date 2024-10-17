@@ -1,20 +1,15 @@
 package vuluu.userservice.controller;
 
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import vuluu.userservice.dto.request.AccountVerifyRequestDTO;
-import vuluu.userservice.dto.request.CreateAccountRequestDTO;
 import vuluu.userservice.dto.response.ApiResponse;
-import vuluu.userservice.dto.response.MessageResponseDTO;
-import vuluu.userservice.dto.response.UserResponseDTO;
-import vuluu.userservice.service.UserService;
+import vuluu.userservice.repository.UserRepository;
 
 @RestController
 @RequestMapping("/users")
@@ -23,19 +18,13 @@ import vuluu.userservice.service.UserService;
 @Slf4j
 public class UserController {
 
-  UserService userService;
+  UserRepository userRepository;
 
-  @PostMapping("/registration")
-  ApiResponse<UserResponseDTO> createUser(@RequestBody @Valid CreateAccountRequestDTO requestDTO) {
-    return ApiResponse.<UserResponseDTO>builder()
-        .result(userService.createUser(requestDTO)).build();
-  }
-
-  @PostMapping("/verify")
-  ApiResponse<MessageResponseDTO> verifyAccount(
-      @RequestBody @Valid AccountVerifyRequestDTO requestDTO) {
-    return ApiResponse.<MessageResponseDTO>builder()
-        .result(userService.verifyAccount(requestDTO)).build();
+  @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/get-all")
+  ApiResponse<Object> createUser() {
+    return ApiResponse.<Object>builder()
+        .result(userRepository.findAll()).build();
   }
 
 }
