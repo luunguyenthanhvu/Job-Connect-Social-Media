@@ -58,9 +58,6 @@ public class User implements Serializable {
   @Default
   LocalDateTime createdDate = LocalDateTime.now();
 
-  @Column(name = "img")
-  String img;
-
   @ManyToMany
   Set<Role> roles;
 

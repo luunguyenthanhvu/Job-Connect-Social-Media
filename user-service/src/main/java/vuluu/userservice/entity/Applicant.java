@@ -33,9 +33,6 @@ public class Applicant extends User implements Serializable {
   @Column(name = "address")
   String address;
 
-  @Column(name = "cv_Link")
-  String cvLink;
-
   @Column(name = "skills")
   String skill;
 }
