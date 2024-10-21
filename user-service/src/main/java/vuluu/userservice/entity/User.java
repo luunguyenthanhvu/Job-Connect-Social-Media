@@ -2,12 +2,14 @@ package vuluu.userservice.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -54,9 +56,12 @@ public class User implements Serializable {
   @Column(name = "description")
   String description;
 
-  @Column(name = "created_date")
+  @Column(name = "createdDate")
   @Default
   LocalDateTime createdDate = LocalDateTime.now();
+
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+  Set<Address> addresses;
 
   @ManyToMany
   Set<Role> roles;

@@ -23,6 +23,6 @@ public class Employer extends User implements Serializable {
   @Column(name = "companyType")
   String companyType;
 
-  @Column(name = "address")
-  String address;
+  @Column(name = "description")
+  String description;
 }

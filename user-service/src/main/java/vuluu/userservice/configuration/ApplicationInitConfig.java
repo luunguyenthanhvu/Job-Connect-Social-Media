@@ -77,8 +77,6 @@ public class ApplicationInitConfig {
             .builder()
             .createdDate(LocalDateTime.now())
             .email(ADMIN_EMAIL)
-            .img(
-                "https://static.wikia.nocookie.net/oregairu-tieng-viet/images/3/3e/YukiSS3-2.jpg/revision/latest?cb=20210925034824&path-prefix=vi")
             .username(ADMIN_USER_NAME)
             .password(passwordEncoder.encode(ADMIN_PASSWORD))
             .roles(roles)
