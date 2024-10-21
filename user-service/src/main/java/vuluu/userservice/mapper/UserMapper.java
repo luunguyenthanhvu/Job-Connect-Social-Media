@@ -18,9 +18,9 @@ public interface UserMapper {
   @Mapping(target = "verified", ignore = true)
   @Mapping(target = "description", ignore = true)
   @Mapping(target = "createdDate", ignore = true)
-  @Mapping(target = "img", ignore = true)
   @Mapping(target = "roles", ignore = true)
   @Mapping(target = "verifyCode", ignore = true)
+  @Mapping(target = "addresses", ignore = true)
   User toUser(CreateAccountRequestDTO requestDTO);
 
   @Mapping(target = "id", source = "id")
