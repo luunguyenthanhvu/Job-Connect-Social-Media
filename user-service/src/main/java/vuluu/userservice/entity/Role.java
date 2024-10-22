@@ -17,9 +17,9 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import vuluu.userservice.enums.ERole;
 
+@Builder
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

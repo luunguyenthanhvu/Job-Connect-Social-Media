@@ -11,11 +11,13 @@ import jakarta.persistence.ManyToOne;
 import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,7 +29,7 @@ public class Address implements Serializable {
   @Id
   @Column(name = "addressId")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  long id;
+  Long id;
 
   @Column(name = "addressDescription")
   String addressDescription;

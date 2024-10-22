@@ -65,9 +65,9 @@ public class ApplicationInitConfig {
 
         roleRepository.save(Role
             .builder()
-            .roleId(ERole.USER)
-            .roleName(ERole.USER)
-            .description("User role")
+            .roleId(ERole.APPLICANT)
+            .roleName(ERole.APPLICANT)
+            .description("Applicant role")
             .build());
 
         var roles = new HashSet<Role>();
