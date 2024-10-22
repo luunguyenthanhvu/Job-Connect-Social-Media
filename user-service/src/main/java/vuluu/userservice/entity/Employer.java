@@ -20,9 +20,15 @@ import lombok.experimental.FieldDefaults;
 @PrimaryKeyJoinColumn(name = "userId")
 public class Employer extends User implements Serializable {
 
-  @Column(name = "companyType")
-  String companyType;
-
   @Column(name = "description")
   String description;
+
+  @Column(name = "website")
+  String website;
+
+  @Column(name = "country")
+  String country;
+
+  @Column(name = "industry")
+  String industry;
 }
