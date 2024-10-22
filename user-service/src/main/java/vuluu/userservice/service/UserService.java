@@ -31,12 +31,14 @@ import vuluu.userservice.util.MyUtils;
 @Slf4j
 public class UserService {
 
+  MyUtils myUtils;
   UserRepository userRepository;
   RoleRepository roleRepository;
   PasswordEncoder passwordEncoder;
   UserMapper userMapper;
   EmailProducer emailProducer;
   String VERIFY_SUCCESS = "Your Account is verify.";
+  String VERIFIED = "Your account has been verified.";
 
   @Transactional
   public UserResponseDTO createUser(CreateAccountRequestDTO requestDTO) {
@@ -54,7 +56,7 @@ public class UserService {
     user = userRepository.save(user);
 
     // generate verify code
-    String code = MyUtils.generateVerificationCode();
+    String code = myUtils.generateVerificationCode();
     user.setVerifyCode(code);
 
     // using kafka to send email to notification service
@@ -68,16 +70,37 @@ public class UserService {
     var user = userRepository.findByEmail(requestDTO.getEmail())
         .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
+    // check if verified
+    if (user.isVerified()) {
+      return MessageResponseDTO.builder().message(VERIFIED).build();
+    }
+
+    // check code
+    if (!user.getVerifyCode().equals(requestDTO.getCode())) {
+      throw new AppException(ErrorCode.VERIFY_TIME_OUT);
+    }
+
     LocalDateTime current = LocalDateTime.now();
 
-    Duration duration = Duration.between(user.getCreatedDate(), current);
+    Duration duration = Duration.between(user.getVerificationSentDate(), current);
 
-    if (duration.toMinutes() <= 30 && user.getVerifyCode().equals(requestDTO.getCode())) {
+    if (duration.toMinutes() <= 30) {
       user.setVerified(true);
       userRepository.save(user);
       return MessageResponseDTO.builder().message(VERIFY_SUCCESS).build();
     } else {
       // resend code
+      // update verification sent date
+      user.setVerificationSentDate(LocalDateTime.now());
+
+      //update code
+      String code = myUtils.generateVerificationCode();
+      user.setVerifyCode(code);
+
+      userRepository.save(user);
+
+      // using kafka to send email to notification service
+      emailProducer.sendEmail(user);
     }
 
     throw new AppException(ErrorCode.VERIFY_TIME_OUT);

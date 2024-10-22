@@ -23,7 +23,7 @@ public class NotificationConsumerService {
   ObjectMapper objectMapper;
 
   @KafkaListener(topics = "${spring.kafka.topics.user-register}", groupId = "notification-group")
-  public void listen(String jsonMessage) {
+  public void listenEmailSender(String jsonMessage) {
     SendEmailRequestDTO requestDTO = null;
     try {
       requestDTO = objectMapper.readValue(jsonMessage, SendEmailRequestDTO.class);

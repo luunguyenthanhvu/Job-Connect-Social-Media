@@ -46,6 +46,9 @@ public class User implements Serializable {
   @Column(name = "email", unique = true)
   String email;
 
+  @Column(name = "phoneNumber", unique = true)
+  String phoneNumber;
+
   @Column(name = "verified")
   @Builder.Default
   boolean verified = false;
@@ -59,6 +62,10 @@ public class User implements Serializable {
   @Column(name = "createdDate")
   @Default
   LocalDateTime createdDate = LocalDateTime.now();
+
+  @Column(name = "verificationSentDate")
+  @Default
+  private LocalDateTime verificationSentDate = LocalDateTime.now();
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   Set<Address> addresses;

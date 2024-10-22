@@ -50,6 +50,10 @@ public class EmailService {
       log.error(e.toString());
       throw new AppException(ErrorCode.UNAUTHENTICATED);
     }
+
+    // replace into verify code for user
+    htmlContent = htmlContent.replace("{verificationCode}", request.getCode());
+
     EmailRequestDTO emailRequest =
         EmailRequestDTO.builder()
             .sender(
