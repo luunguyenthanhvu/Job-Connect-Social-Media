@@ -16,16 +16,7 @@ import vuluu.userservice.service.AddressService;
 public interface EmployerMapper {
 
   @Mapping(target = "id", ignore = true)
-  @Mapping(target = "verified", ignore = true)
-  @Mapping(target = "createdDate", ignore = true)
-  @Mapping(target = "roles", ignore = true)
-  @Mapping(target = "verifyCode", ignore = true)
-  @Mapping(target = "addresses", ignore = true)
-  @Mapping(target = "verificationSentDate", ignore = true)
-  @Mapping(target = "username", ignore = true)
-  @Mapping(target = "password", ignore = true)
-  @Mapping(target = "email", ignore = true)
-  @Mapping(target = "phoneNumber", ignore = true)
+  @Mapping(target = "user", ignore = true)
   @Mapping(target = "description", source = "requestDTO.description")
   @Mapping(target = "website", source = "requestDTO.website")
   @Mapping(target = "country", source = "requestDTO.country")

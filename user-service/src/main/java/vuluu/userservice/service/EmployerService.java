@@ -44,8 +44,7 @@ public class EmployerService {
 
     // map from dto to entity
     var employer = employerMapper.toEmployer(requestDTO, addressService);
-    employer.setId(userId);
-
+    employer.setUser(user);
 
     // update role for Employer
     var roles = new HashSet<>(user.getRoles());

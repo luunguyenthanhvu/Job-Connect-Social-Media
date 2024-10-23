@@ -46,7 +46,7 @@ public class User implements Serializable {
   @Column(name = "email", unique = true)
   String email;
 
-  @Column(name = "phoneNumber", unique = true)
+  @Column(name = "phoneNumber")
   String phoneNumber;
 
   @Column(name = "verified")

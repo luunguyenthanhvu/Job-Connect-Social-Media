@@ -57,6 +57,7 @@ public class AuthenticationService {
       throw new AppException(ErrorCode.UNAUTHENTICATED);
     }
 
+    log.info(user + "");
     var token = generateToken(user);
 
     return AuthenticationResponseDTO
