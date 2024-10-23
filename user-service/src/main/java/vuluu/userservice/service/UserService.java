@@ -50,7 +50,7 @@ public class UserService {
     user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
 
     HashSet<Role> roles = new HashSet<>();
-    roleRepository.findByRoleId(ERole.APPLICANT).ifPresent(roles::add);
+    roleRepository.findByRoleId(ERole.USER).ifPresent(roles::add);
 
     user.setRoles(roles);
     user = userRepository.save(user);

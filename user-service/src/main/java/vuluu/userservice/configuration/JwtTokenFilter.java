@@ -5,20 +5,23 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
- * This is my class for extract userId from authorization
+ * This is my class for extracting userId and roles from authorization.
  */
 @Component
 @Slf4j
@@ -34,16 +37,24 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
     if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
       log.info("Check done!");
-      String token = request.getHeader("Authorization").substring(7);
+      String token = authorizationHeader.substring(7);
 
-      // decode the token
+      // Decode the token
+      log.info("Bắt đầu decode");
       Jwt jwt = customJwtDecoder.decode(token);
+      log.info("JWT" + jwt.getClaims().get("scope"));
       String userId = String.valueOf(jwt.getClaims().get("userId"));
+      log.info("userID" + userId);
+      // Extract authorities (roles/permissions) from JWT claims
+      List<SimpleGrantedAuthority> authorities = Arrays.stream(
+              jwt.getClaims().get("scope").toString().split(" "))
+          .map(SimpleGrantedAuthority::new)
+          .collect(Collectors.toList());
 
-      // Save userId to security context for other services
-      SecurityContextHolder.getContext().setAuthentication(
-          new UsernamePasswordAuthenticationToken(userId, null, Collections.EMPTY_LIST)
-      );
+      // Save userId and authorities to security context
+      UsernamePasswordAuthenticationToken authentication =
+          new UsernamePasswordAuthenticationToken(userId, null, authorities);
+      SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     filterChain.doFilter(request, response);

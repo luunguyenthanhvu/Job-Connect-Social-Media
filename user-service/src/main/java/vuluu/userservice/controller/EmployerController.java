@@ -23,8 +23,7 @@ public class EmployerController {
 
   EmployerService employerService;
 
-  @PreAuthorize("hasAnyRole(APPLICANT,EMPLOYER,ADMIN)")
-
+  @PreAuthorize("hasRole('USER')")
   @PostMapping("/create")
   public ApiResponse<MessageResponseDTO> createEmployerAccount(@RequestBody
   CreateAccountEmployerRequestDTO requestDTO) {

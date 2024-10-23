@@ -20,7 +20,7 @@ public class UserController {
 
   UserRepository userRepository;
 
-  @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYER') or hasAuthority('ROLE_APPLICANT')")
+  @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
   @GetMapping("/get-all")
   ApiResponse<Object> createUser() {
     return ApiResponse.<Object>builder()

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vuluu.userservice.dto.request.CreateAccountEmployerRequestDTO;
 import vuluu.userservice.dto.response.MessageResponseDTO;
-import vuluu.userservice.entity.Role;
 import vuluu.userservice.enums.ERole;
 import vuluu.userservice.exception.AppException;
 import vuluu.userservice.exception.ErrorCode;
@@ -47,9 +46,11 @@ public class EmployerService {
     var employer = employerMapper.toEmployer(requestDTO, addressService);
     employer.setId(userId);
 
+
     // update role for Employer
-    HashSet<Role> roles = new HashSet<>();
-    roleRepository.findByRoleId(ERole.EMPLOYER).ifPresent(roles::add);
+    var roles = new HashSet<>(user.getRoles());
+    roleRepository.findByRoleId(ERole.EMPLOYER)
+        .ifPresent(roles::add);
     user.setRoles(roles);
 
     // save updated role
