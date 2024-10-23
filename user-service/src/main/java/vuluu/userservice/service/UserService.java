@@ -77,7 +77,7 @@ public class UserService {
 
     // check code
     if (!user.getVerifyCode().equals(requestDTO.getCode())) {
-      throw new AppException(ErrorCode.VERIFY_TIME_OUT);
+      throw new AppException(ErrorCode.WRONG_VERIFY_CODE);
     }
 
     LocalDateTime current = LocalDateTime.now();

@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SetUpAccountEmployerRequestDTO {
+public class CreateAccountEmployerRequestDTO {
 
   @Nonnull
   String description;

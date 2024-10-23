@@ -1,7 +1,7 @@
 package vuluu.userservice.enums;
 
 public enum ERole {
-  ADMIN("ADMIN"), EMPLOYER("EMPLOYER"), USER("Applicant");
+  ADMIN("ADMIN"), EMPLOYER("EMPLOYER"), USER("USER");
   private final String text;
 
   private ERole(String text) {

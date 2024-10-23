@@ -40,6 +40,8 @@ public class IdentityService {
 
     SignedJWT signedJWT = SignedJWT.parse(token);
 
+    signedJWT.getJWTClaimsSet().getStringClaim("");
+
     Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
 
     var verified = signedJWT.verify(verifier);

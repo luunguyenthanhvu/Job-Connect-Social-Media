@@ -22,9 +22,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+@Builder
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -46,7 +46,7 @@ public class User implements Serializable {
   @Column(name = "email", unique = true)
   String email;
 
-  @Column(name = "phoneNumber", unique = true)
+  @Column(name = "phoneNumber")
   String phoneNumber;
 
   @Column(name = "verified")
@@ -72,5 +72,4 @@ public class User implements Serializable {
 
   @ManyToMany
   Set<Role> roles;
-
 }

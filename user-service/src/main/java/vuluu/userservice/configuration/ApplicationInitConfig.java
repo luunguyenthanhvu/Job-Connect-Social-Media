@@ -67,7 +67,7 @@ public class ApplicationInitConfig {
             .builder()
             .roleId(ERole.USER)
             .roleName(ERole.USER)
-            .description("User role")
+            .description("USER role")
             .build());
 
         var roles = new HashSet<Role>();

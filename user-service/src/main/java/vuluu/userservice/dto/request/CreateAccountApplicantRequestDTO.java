@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SetUpAccountApplicantRequestDTO {
+public class CreateAccountApplicantRequestDTO {
 
+  String test;
 }
