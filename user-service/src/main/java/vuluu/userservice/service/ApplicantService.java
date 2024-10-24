@@ -1,38 +1,34 @@
 package vuluu.userservice.service;
 
-import java.util.HashSet;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vuluu.userservice.dto.request.CreateAccountEmployerRequestDTO;
+import vuluu.userservice.dto.request.CreateAccountApplicantRequestDTO;
 import vuluu.userservice.dto.response.MessageResponseDTO;
-import vuluu.userservice.enums.ERole;
 import vuluu.userservice.exception.AppException;
 import vuluu.userservice.exception.ErrorCode;
-import vuluu.userservice.mapper.EmployerMapper;
+import vuluu.userservice.mapper.ApplicantMapper;
 import vuluu.userservice.repository.ApplicantRepository;
 import vuluu.userservice.repository.EmployerRepository;
-import vuluu.userservice.repository.RoleRepository;
 import vuluu.userservice.repository.UserRepository;
 import vuluu.userservice.util.MyUtils;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class EmployerService {
+public class ApplicantService {
 
   EmployerRepository employerRepository;
   AddressService addressService;
-  EmployerMapper employerMapper;
   UserRepository userRepository;
   ApplicantRepository applicantRepository;
-  RoleRepository roleRepository;
+  ApplicantMapper applicantMapper;
   MyUtils myUtils;
 
   @Transactional
-  public MessageResponseDTO createEmployerAccount(CreateAccountEmployerRequestDTO requestDTO) {
+  public MessageResponseDTO createApplicantAccount(CreateAccountApplicantRequestDTO requestDTO) {
     String userId = myUtils.getUserId();
 
     // If user not present throw error user not exist
@@ -45,21 +41,13 @@ public class EmployerService {
     }
 
     // map from dto to entity
-    var employer = employerMapper.toEmployer(requestDTO, addressService);
-    employer.setUser(user);
+    var applicant = applicantMapper.toApplicant(requestDTO, addressService);
+    applicant.setUser(user);
 
-    // update role for Employer
-    var roles = new HashSet<>(user.getRoles());
-    roleRepository.findByRoleId(ERole.EMPLOYER)
-        .ifPresent(roles::add);
-    user.setRoles(roles);
+    // for applicant don't need to update role
+    // save new applicant
+    applicantRepository.save(applicant);
 
-    // save updated role
-    userRepository.save(user);
-
-    // save new employer
-    employerRepository.save(employer);
-
-    return MessageResponseDTO.builder().message("Employer create successfully").build();
+    return MessageResponseDTO.builder().message("Applicant create successfully").build();
   }
 }

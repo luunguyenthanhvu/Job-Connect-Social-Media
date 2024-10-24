@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vuluu.postservice.dto.request.JobPostRequestDTO;
@@ -12,6 +11,7 @@ import vuluu.postservice.dto.response.MessageResponseDTO;
 import vuluu.postservice.entity.JobPost;
 import vuluu.postservice.mapper.JobPostMapper;
 import vuluu.postservice.repository.JobPostRepository;
+import vuluu.postservice.util.MyUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -21,11 +21,12 @@ public class JobPostService {
 
   JobPostMapper jobPostMapper;
   JobPostRepository jobPostRepository;
+  MyUtils myUtils;
 
   @Transactional
   public MessageResponseDTO postJob(JobPostRequestDTO requestDTO) {
     // get user Id from jwt token filter
-    String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    String userId = myUtils.getUserId();
     JobPost jobPost = jobPostMapper.toJobPost(requestDTO);
     jobPost.setUserId(userId);
     jobPostRepository.save(jobPost);
