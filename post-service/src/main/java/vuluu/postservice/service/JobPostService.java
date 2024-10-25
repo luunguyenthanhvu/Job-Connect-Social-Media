@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vuluu.postservice.dto.request.JobPostRequestDTO;
-import vuluu.postservice.dto.response.MessageResponseDTO;
+import vuluu.postservice.dto.response.JobPostResponseDTO;
 import vuluu.postservice.entity.JobPost;
 import vuluu.postservice.mapper.JobPostMapper;
 import vuluu.postservice.repository.JobPostRepository;
@@ -24,12 +24,15 @@ public class JobPostService {
   MyUtils myUtils;
 
   @Transactional
-  public MessageResponseDTO postJob(JobPostRequestDTO requestDTO) {
+  public JobPostResponseDTO postJob(JobPostRequestDTO requestDTO) {
     // get user Id from jwt token filter
     String userId = myUtils.getUserId();
+
+    // map to jobEntity
     JobPost jobPost = jobPostMapper.toJobPost(requestDTO);
     jobPost.setUserId(userId);
     jobPostRepository.save(jobPost);
-    return MessageResponseDTO.builder().message("Post Job success!").build();
+
+    return jobPostMapper.toJobPostResponseDTO(jobPost);
   }
 }

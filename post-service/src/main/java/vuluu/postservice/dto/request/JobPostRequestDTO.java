@@ -2,6 +2,7 @@ package vuluu.postservice.dto.request;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,9 +19,12 @@ import vuluu.postservice.enums.EEmploymentType;
 public class JobPostRequestDTO {
 
   String title;
-  String description;
+  String jobDescription;
+  String jobExpertise;
+  String jobWelfare;
   String addressId;
   @Enumerated(value = EnumType.STRING)
   EEmploymentType employmentType;
   int numberOfPositions;
+  Date expirationDate;
 }
