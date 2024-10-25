@@ -22,5 +22,6 @@ public class JobPostResponseDTO {
   @Enumerated(value = EnumType.STRING)
   EEmploymentType employmentType;
   int numberOfPositions;
+  Date postedDate;
   Date expirationDate;
 }

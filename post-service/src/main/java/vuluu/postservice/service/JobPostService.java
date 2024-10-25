@@ -7,8 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vuluu.postservice.dto.request.JobPostRequestDTO;
+import vuluu.postservice.dto.response.JobPostDetailResponseDTO;
 import vuluu.postservice.dto.response.JobPostResponseDTO;
 import vuluu.postservice.entity.JobPost;
+import vuluu.postservice.exception.AppException;
+import vuluu.postservice.exception.ErrorCode;
 import vuluu.postservice.mapper.JobPostMapper;
 import vuluu.postservice.repository.JobPostRepository;
 import vuluu.postservice.util.MyUtils;
@@ -35,4 +38,16 @@ public class JobPostService {
 
     return jobPostMapper.toJobPostResponseDTO(jobPost);
   }
+
+  public JobPostDetailResponseDTO getJobDetail(Long jobId) {
+    var job = jobPostRepository.findById(jobId)
+        .orElseThrow(() -> new AppException(ErrorCode.JOB_NOT_EXISTED));
+
+    return jobPostMapper.toJobPostDetailResponseDTO(job);
+  }
+
+  public JobPostResponseDTO getListCompanyJob(Long id) {
+    return null;
+  }
+
 }

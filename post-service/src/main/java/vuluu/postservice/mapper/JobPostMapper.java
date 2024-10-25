@@ -5,6 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import vuluu.postservice.dto.request.JobPostRequestDTO;
+import vuluu.postservice.dto.response.JobPostDetailResponseDTO;
 import vuluu.postservice.dto.response.JobPostResponseDTO;
 import vuluu.postservice.entity.JobPost;
 
@@ -19,4 +20,6 @@ public interface JobPostMapper {
   JobPost toJobPost(JobPostRequestDTO requestDTO);
 
   JobPostResponseDTO toJobPostResponseDTO(JobPost jobPost);
+
+  JobPostDetailResponseDTO toJobPostDetailResponseDTO(JobPost jobPost);
 }

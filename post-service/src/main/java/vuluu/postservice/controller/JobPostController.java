@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vuluu.postservice.dto.request.JobPostRequestDTO;
@@ -17,7 +17,7 @@ import vuluu.postservice.dto.response.JobPostResponseDTO;
 import vuluu.postservice.service.JobPostService;
 
 @RestController
-@RequestMapping("/job-post")
+@RequestMapping("/job")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class JobPostController {
@@ -31,8 +31,16 @@ public class JobPostController {
         .build();
   }
 
-  @GetMapping("/get/job-detail/{id}")
-  public ApiResponse<JobPostDetailResponseDTO> getJobPostDetails(@RequestHeader("id") Long id) {
+  @GetMapping("/get/job-detail/{jobId}")
+  public ApiResponse<JobPostDetailResponseDTO> getJobPostDetail(
+      @PathVariable Long jobId) {
+    return ApiResponse.<JobPostDetailResponseDTO>builder().result(
+        jobPostService.getJobDetail(jobId)).build();
+  }
+
+  @GetMapping("/get/company-job/{companyId}")
+  public ApiResponse<JobPostResponseDTO> getListCompanyJob(
+      @PathVariable Long companyId) {
     return null;
   }
 }
