@@ -13,6 +13,7 @@ import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,18 +31,19 @@ public class Application implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "applicationId")
-  private Long id;
+  Long id;
 
   @Column(name = "applicantId")
-  private String applicantId; // ID của ứng viên
+  String applicantId; // ID của ứng viên
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "jobId", nullable = false)
-  private JobPost job;
+  JobPost job;
 
   @Column(name = "appliedDate")
-  private Date appliedDate;
+  @Default
+  Date appliedDate = new Date();
 
-  @Column(name = "status")
-  private String status;
+  @Column(columnDefinition = "TEXT", name = "coverLetter")
+  String coverLetter;
 }

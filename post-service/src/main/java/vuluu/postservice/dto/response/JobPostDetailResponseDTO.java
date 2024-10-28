@@ -1,16 +1,11 @@
 package vuluu.postservice.dto.response;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -35,4 +30,5 @@ public class JobPostDetailResponseDTO {
   int numberOfPositions;
   Date postedDate;
   Date expirationDate;
+  boolean isApplied;
 }

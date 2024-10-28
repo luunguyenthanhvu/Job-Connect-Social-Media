@@ -1,5 +1,6 @@
 package vuluu.postservice.mapper;
 
+import java.util.List;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -21,5 +22,8 @@ public interface JobPostMapper {
 
   JobPostResponseDTO toJobPostResponseDTO(JobPost jobPost);
 
+  @Mapping(target = "isApplied", ignore = true)
   JobPostDetailResponseDTO toJobPostDetailResponseDTO(JobPost jobPost);
+
+  List<JobPostResponseDTO> toListJobPostResponseDTO(List<JobPost> jobPostList);
 }
