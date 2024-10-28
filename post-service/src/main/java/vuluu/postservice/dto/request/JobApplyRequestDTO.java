@@ -15,6 +15,5 @@ import lombok.experimental.FieldDefaults;
 public class JobApplyRequestDTO {
 
   Long jobId;
-  String userId;
   String coverLetter;
 }
