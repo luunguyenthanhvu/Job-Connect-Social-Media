@@ -40,9 +40,6 @@ public class Applicant implements Serializable {
   @Column(name = "dob")
   Date dob;
 
-  @Column(name = "address")
-  String address;
-
   @Column(name = "skills")
   String skill;
 }

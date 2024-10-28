@@ -36,15 +36,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
       FilterChain filterChain) throws ServletException, IOException {
     String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
     if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-      log.info("Check done!");
+
       String token = authorizationHeader.substring(7);
 
       // Decode the token
-      log.info("Bắt đầu decode");
       Jwt jwt = customJwtDecoder.decode(token);
-      log.info("JWT" + jwt.getClaims().get("scope"));
       String userId = String.valueOf(jwt.getClaims().get("userId"));
-      log.info("userID" + userId);
+
       // Extract authorities (roles/permissions) from JWT claims
       List<SimpleGrantedAuthority> authorities = Arrays.stream(
               jwt.getClaims().get("scope").toString().split(" "))

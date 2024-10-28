@@ -1,6 +1,5 @@
-package vuluu.userservice.dto.request;
+package vuluu.postservice.dto.request;
 
-import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,14 +8,13 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateAccountApplicantRequestDTO {
+public class JobApplyRequestDTO {
 
-  String firstname;
-  String lastname;
-  Date dob;
-  String[] address;
+  Long jobId;
+  String userId;
+  String coverLetter;
 }

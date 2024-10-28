@@ -39,8 +39,14 @@ public class JobPost implements Serializable {
   @Column(name = "title")
   String title;
 
-  @Column(name = "description")
-  String description;
+  @Column(name = "jobDescription")
+  String jobDescription;
+
+  @Column(name = "jobExpertise")
+  String jobExpertise;
+
+  @Column(name = "jobWelfare")
+  String jobWelfare;
 
   /**
    * employer id
@@ -64,6 +70,9 @@ public class JobPost implements Serializable {
   @Column(name = "postedDate")
   @Default
   private Date postedDate = new Date();
+
+  @Column(name = "expirationDate", nullable = false)
+  private Date expirationDate;
 
   @OneToMany(mappedBy = "job", fetch = FetchType.LAZY)
   Set<Application> applications;

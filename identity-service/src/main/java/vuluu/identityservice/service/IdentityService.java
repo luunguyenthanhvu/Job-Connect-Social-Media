@@ -46,7 +46,13 @@ public class IdentityService {
 
     var verified = signedJWT.verify(verifier);
 
-    if (!(verified && expiryTime.after(new Date()))) {
+    // JWT wrong format
+    if (!verified) {
+      throw new AppException(ErrorCode.UNAUTHENTICATED);
+    }
+
+    // JWT expired
+    if (!expiryTime.after(new Date())) {
       throw new AppException(ErrorCode.UNAUTHENTICATED);
     }
 
