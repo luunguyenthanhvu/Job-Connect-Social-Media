@@ -22,15 +22,25 @@ public class NotificationConsumerService {
   EmailService emailService;
   ObjectMapper objectMapper;
 
-  @KafkaListener(topics = "${spring.kafka.topics.user-register}", groupId = "notification-group")
-  public void listenEmailSender(String jsonMessage) {
+  @KafkaListener(topics = "${spring.kafka.topics.user-register}", groupId = "${spring.kafka.consumer.group-id}")
+  public void listenEmailRegister(String jsonMessage) {
     SendEmailRequestDTO requestDTO = null;
     try {
       requestDTO = objectMapper.readValue(jsonMessage, SendEmailRequestDTO.class);
     } catch (JsonProcessingException e) {
-      throw new AppException(ErrorCode.UNAUTHENTICATED);
+      throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
     }
     log.info(String.valueOf(requestDTO));
     emailService.sendEmail(requestDTO);
+  }
+
+  @KafkaListener(topics = "${spring.kafka.topics.suggest-job-user}", groupId = "${spring.kafka.consumer.group-id}")
+  public void listenMatchingJob(String jsonMessage) {
+
+  }
+
+  @KafkaListener(topics = "${spring.kafka.topics.user-matching}", groupId = "${spring.kafka.consumer.group-id}")
+  public void listenMatchingUser(String jsonMessage) {
+
   }
 }

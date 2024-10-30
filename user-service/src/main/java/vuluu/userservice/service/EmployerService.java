@@ -1,6 +1,7 @@
 package vuluu.userservice.service;
 
 import java.util.HashSet;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vuluu.userservice.dto.request.CreateAccountEmployerRequestDTO;
 import vuluu.userservice.dto.response.MessageResponseDTO;
+import vuluu.userservice.entity.Role;
 import vuluu.userservice.enums.ERole;
 import vuluu.userservice.exception.AppException;
 import vuluu.userservice.exception.ErrorCode;
@@ -49,7 +51,7 @@ public class EmployerService {
     employer.setUser(user);
 
     // update role for Employer
-    var roles = new HashSet<>(user.getRoles());
+    Set<Role> roles = new HashSet<>();
     roleRepository.findByRoleId(ERole.EMPLOYER)
         .ifPresent(roles::add);
     user.setRoles(roles);

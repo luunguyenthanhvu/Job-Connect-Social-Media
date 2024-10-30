@@ -22,7 +22,7 @@ public interface JobPostMapper {
 
   JobPostResponseDTO toJobPostResponseDTO(JobPost jobPost);
 
-  @Mapping(target = "isApplied", ignore = true)
+  @Mapping(target = "applied", ignore = true)
   JobPostDetailResponseDTO toJobPostDetailResponseDTO(JobPost jobPost);
 
   List<JobPostResponseDTO> toListJobPostResponseDTO(List<JobPost> jobPostList);

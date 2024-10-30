@@ -12,8 +12,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JobApplyRequestDTO {
+public class JobSkillExtractRequestDTO {
 
   Long jobId;
-  String coverLetter;
+  String skill;
 }

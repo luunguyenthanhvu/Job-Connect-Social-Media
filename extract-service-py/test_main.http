@@ -1,0 +1,4 @@
+# Test your FastAPI endpoints
+
+POST http://127.0.0.1:8084/extract_skills
+Accept: application/json

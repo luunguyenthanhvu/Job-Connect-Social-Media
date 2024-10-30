@@ -1,4 +1,4 @@
-package vuluu.postservice.dto.request;
+package vuluu.postservice.dto.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,8 +12,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JobApplyRequestDTO {
+public class UserSkillExtractResponseDTO {
 
-  Long jobId;
-  String coverLetter;
+  String userId;
+  String[] matchingJobs;
 }

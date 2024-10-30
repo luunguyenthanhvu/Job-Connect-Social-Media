@@ -1,4 +1,4 @@
-package vuluu.userservice.enums;
+package vuluu.postservice.enums;
 
 public enum KafkaTopics {
   ONBOARD_SUCCESSFUL("onboard-successful"),
