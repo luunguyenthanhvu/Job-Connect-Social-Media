@@ -8,27 +8,23 @@ app = Flask(__name__)
 # Tạo bảng cơ sở dữ liệu
 create_tables()
 
-@app.route('/upload_cv', methods=['POST'])
+@app.route('/extract_user_skill', methods=['POST'])
 def upload_cv():
     data = request.get_json()
-    user_id = data.get("user_id")
-    cv_text = data.get("cv_text")
+    user_id = data.get("userId")
+    cv_text = data.get("cvSkill")
 
     # Gọi hàm để trích xuất và lưu kỹ năng
     extract_and_save_skills_user(user_id, cv_text)
+    matching_jobs = find_matching_jobs(user_id)
 
-    return jsonify({"message": "Skills extracted and saved successfully!"}), 200
+    # Trả về danh sách các ứng viên phù hợp
+    return jsonify({
+        "userId": user_id,
+        "matchingJobs": matching_jobs
+    })
 
-@app.route('/recommend_jobs', methods=['POST'])
-def recommend_jobs():
-    data = request.get_json()
-    user_id = data.get("user_id")
-
-    find_matching_jobs(user_id)
-
-    return jsonify({"message": "Job matching completed successfully!"}), 200
-
-@app.route('/api/jobs', methods=['POST'])
+@app.route('/extract_description', methods=['POST'])
 def handle_job():
     # Lấy dữ liệu từ yêu cầu
     data = request.get_json()
@@ -41,8 +37,8 @@ def handle_job():
 
     # Trả về danh sách các ứng viên phù hợp
     return jsonify({
-        "job_id": job_id,
-        "matching_users": matching_users
+        "jobId": job_id,
+        "matchingUsers": matching_users
     })
 
 if __name__ == '__main__':
