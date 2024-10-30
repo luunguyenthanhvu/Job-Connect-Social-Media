@@ -28,7 +28,7 @@ public class NotificationConsumerService {
     try {
       requestDTO = objectMapper.readValue(jsonMessage, SendEmailRequestDTO.class);
     } catch (JsonProcessingException e) {
-      throw new AppException(ErrorCode.UNAUTHENTICATED);
+      throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
     }
     log.info(String.valueOf(requestDTO));
     emailService.sendEmail(requestDTO);

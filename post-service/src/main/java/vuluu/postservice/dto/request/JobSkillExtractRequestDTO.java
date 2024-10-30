@@ -14,6 +14,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JobSkillExtractRequestDTO {
 
-  String jobId;
+  Long jobId;
   String skill;
 }

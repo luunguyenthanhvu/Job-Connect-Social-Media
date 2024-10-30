@@ -7,8 +7,10 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
 import vuluu.postservice.dto.request.JobApplyRequestDTO;
 import vuluu.postservice.dto.request.JobPostRequestDTO;
+import vuluu.postservice.dto.request.JobSkillExtractRequestDTO;
 import vuluu.postservice.dto.response.JobPostDetailResponseDTO;
 import vuluu.postservice.dto.response.JobPostResponseDTO;
 import vuluu.postservice.dto.response.MessageResponseDTO;
@@ -18,6 +20,7 @@ import vuluu.postservice.exception.AppException;
 import vuluu.postservice.exception.ErrorCode;
 import vuluu.postservice.mapper.JobPostMapper;
 import vuluu.postservice.repository.ApplicationRepository;
+import vuluu.postservice.repository.JobExtractClient;
 import vuluu.postservice.repository.JobPostRepository;
 import vuluu.postservice.util.MyUtils;
 
@@ -31,6 +34,7 @@ public class JobPostService {
   JobPostRepository jobPostRepository;
   MyUtils myUtils;
   ApplicationRepository applicationRepository;
+  JobExtractClient jobExtractClient;
 
   @Transactional
   public JobPostResponseDTO postJob(JobPostRequestDTO requestDTO) {
@@ -40,8 +44,21 @@ public class JobPostService {
     // map to jobEntity
     JobPost jobPost = jobPostMapper.toJobPost(requestDTO);
     jobPost.setUserId(userId);
-    jobPostRepository.save(jobPost);
+    jobPost = jobPostRepository.save(jobPost);
 
+    // post job data to extract service
+    jobExtractClient.extractJobDescription(JobSkillExtractRequestDTO
+            .builder()
+            .jobId(jobPost.getId())
+            .skill(jobPost.getJobExpertise())
+            .build())
+        .flatMap(response -> {
+          // Thực hiện các thao tác với response
+          System.out.println("Kết quả nhận được từ service: " + response);
+          // Có thể trả về Mono khác hoặc xử lý tiếp
+          return Mono.just(response);
+        })
+        .subscribe();
     return jobPostMapper.toJobPostResponseDTO(jobPost);
   }
 

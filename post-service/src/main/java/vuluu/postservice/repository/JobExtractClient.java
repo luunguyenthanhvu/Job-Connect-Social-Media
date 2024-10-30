@@ -10,7 +10,7 @@ import vuluu.postservice.dto.response.ApiResponse;
 import vuluu.postservice.dto.response.JobSkillExtractResponseDTO;
 import vuluu.postservice.dto.response.UserSkillExtractResponseDTO;
 
-public interface JobExtractServiceClient {
+public interface JobExtractClient {
 
   @PostExchange(url = "/extract_description", contentType = MediaType.APPLICATION_JSON_VALUE)
   Mono<ApiResponse<JobSkillExtractResponseDTO>> extractJobDescription(
