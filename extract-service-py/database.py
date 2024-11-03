@@ -1,15 +1,15 @@
-import mysql.connector
+import pymysql
 from mysql.connector import Error
 
 def connect_db():
-    """Establish a connection to the database."""
+
     try:
-        connection = mysql.connector.connect(
-            host="localhost",
-            port=3306,
+        connection = pymysql.connect(
+            host="127.0.0.1",
             user="root",
             password="12345678",
-            database="job-csm-extract-service"
+            database="job-csm-extract-service",
+            port=3306
         )
         return connection
     except Error as e:
