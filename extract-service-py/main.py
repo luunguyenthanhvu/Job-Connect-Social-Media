@@ -5,7 +5,7 @@ from database import create_tables
 
 app = Flask(__name__)
 
-# Tạo bảng cơ sở dữ liệu
+# # Tạo bảng cơ sở dữ liệu
 create_tables()
 
 @app.route('/extract_user_skill', methods=['POST'])
@@ -13,7 +13,7 @@ def upload_cv():
     data = request.get_json()
     user_id = data.get("userId")
     cv_text = data.get("cvSkill")
-
+    #
     # Gọi hàm để trích xuất và lưu kỹ năng
     extract_and_save_skills_user(user_id, cv_text)
     matching_jobs = find_matching_jobs(user_id)
@@ -31,7 +31,7 @@ def handle_job():
     job_id = data.get('jobId')
     job_description = data.get('jobDescription')
 
-    # Gọi hàm để trích xuất và lưu kỹ năng
+    # # Gọi hàm để trích xuất và lưu kỹ năng
     extract_and_save_skills_job(job_id, job_description)
     matching_users = find_matching_user(job_id)
 
