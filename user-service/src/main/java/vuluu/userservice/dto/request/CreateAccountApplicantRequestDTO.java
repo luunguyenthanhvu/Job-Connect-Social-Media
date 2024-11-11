@@ -18,5 +18,10 @@ public class CreateAccountApplicantRequestDTO {
   String firstname;
   String lastname;
   Date dob;
+  String summary;
+  String educationList;
+  String workExperiences;
+  String skills;
+  String certifications;
   String[] address;
 }
