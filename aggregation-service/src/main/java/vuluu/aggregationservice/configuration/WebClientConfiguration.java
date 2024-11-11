@@ -1,62 +1,66 @@
 package vuluu.aggregationservice.configuration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.reactive.function.client.ClientRequest;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.netty.http.client.HttpClient;
+import reactor.core.publisher.Mono;
 
 @Configuration
+@Slf4j
 public class WebClientConfiguration {
 
-  @Value("${profile-service.domain}")
-  private String profileBaseURI;
-  @Value("${identity-service.domain}")
-  private String identityBaseURI;
-  @Value("${video-streaming-service.domain}")
-  private String videoStreamingBaseURI;
-  @Value("${notification-service.domain}")
-  private String notificationBaseURI;
-  @Value("${comment-service.domain}")
-  private String commentBaseURI;
+  @Value("${user-service.domain}")
+  private String userServiceBaseURI;
+  @Value("${post-service.domain}")
+  private String postServiceBaseURI;
+  @Value("${file-service.domain}")
+  private String fileServiceBaseURI;
 
   @Bean
   @LoadBalanced
   public WebClient.Builder webClientBuilder() {
-    return WebClient.builder();
+    return WebClient.builder()
+        .filter(ExchangeFilterFunction.ofRequestProcessor(clientRequest ->
+            Mono.deferContextual(contextView -> {
+              // Lấy JWT từ Reactor Context
+              String jwt = contextView.getOrDefault("jwt", null);
+              log.info("JWT in WebClient: " + jwt);
+              if (jwt != null) {
+                // Thêm JWT vào header Authorization của yêu cầu
+                ClientRequest modifiedRequest = ClientRequest.from(clientRequest)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
+                    .build();
+                return Mono.just(modifiedRequest);
+              }
+              return Mono.just(clientRequest); // Trả về request gốc nếu không có JWT
+            })
+        ));
   }
 
-  @Bean(value = "identityWebClient")
-  public WebClient identityWebClient(WebClient.Builder builder) {
-    return createWebClient(builder, identityBaseURI);
+  @Bean(value = "userWebClient")
+  public WebClient userWebClient(WebClient.Builder builder) {
+    return createWebClient(builder, userServiceBaseURI);
   }
 
-  @Bean(value = "profileWebClient")
-  public WebClient profileWebClient(WebClient.Builder builder) {
-    return createWebClient(builder, profileBaseURI);
+  @Bean(value = "postWebClient")
+  public WebClient postWebClient(WebClient.Builder builder) {
+    return createWebClient(builder, postServiceBaseURI);
   }
 
-  @Bean(value = "videoStreamingWebClient")
-  public WebClient videoStreamingWebClient(WebClient.Builder builder) {
-    return createWebClient(builder, videoStreamingBaseURI);
-  }
-
-  @Bean(value = "notificationWebClient")
-  public WebClient notificationStreamingWebClient(WebClient.Builder builder) {
-    return createWebClient(builder, notificationBaseURI);
-  }
-
-  @Bean(value = "commentWebClient")
-  public WebClient commentWebClient(WebClient.Builder builder) {
-    return createWebClient(builder, commentBaseURI);
+  @Bean(value = "fileWebClient")
+  public WebClient fileWebClient(WebClient.Builder builder) {
+    return createWebClient(builder, fileServiceBaseURI);
   }
 
   private WebClient createWebClient(WebClient.Builder builder, String baseURI) {
     return builder
         .baseUrl(baseURI) // Thiết lập base URL cho WebClient
-        .clientConnector(new ReactorClientHttpConnector(HttpClient.create()))
         .build();
   }
 }

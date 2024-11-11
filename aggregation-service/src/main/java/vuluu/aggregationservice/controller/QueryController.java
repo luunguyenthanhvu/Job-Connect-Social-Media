@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import vuluu.aggregationservice.dto.response.ApiResponse;
 import vuluu.aggregationservice.dto.response.UserResponseDTO;
-import vuluu.aggregationservice.service.AggregationService;
+import vuluu.aggregationservice.service.UserAggregationService;
 
 @RestController
 @RequestMapping("/query")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class AggregationController {
+public class QueryController {
 
-  AggregationService aggregationService;
+  UserAggregationService aggregationService;
 
   @GetMapping("/user-info")
   public Mono<ApiResponse<UserResponseDTO>> getUserById() {
