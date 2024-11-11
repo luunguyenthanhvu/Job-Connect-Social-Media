@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import vuluu.fileservice.entity.Image;
 import vuluu.fileservice.enums.EImageType;
 import vuluu.fileservice.repository.ImageRepository;
+import vuluu.fileservice.util.MyUtils;
 
 @Service
 public class CloudinaryService {
@@ -19,6 +20,9 @@ public class CloudinaryService {
 
   @Autowired
   private ImageRepository imageRepository;
+
+  @Autowired
+  private MyUtils myUtils;
 
   public CloudinaryService(@Value("${cloudinary.cloud_name}") String cloudName,
       @Value("${cloudinary.api_key}") String apiKey,
@@ -29,13 +33,16 @@ public class CloudinaryService {
         "api_secret", apiSecret));
   }
 
-  public String uploadImage(MultipartFile file, String userId, String postId,
+  public String uploadImage(MultipartFile file, String postId,
       EImageType type) throws IOException {
     // Upload the image to Cloudinary
     Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
 
     // Get the image URL from the upload result
     String imageUrl = uploadResult.get("url").toString();
+
+    // Get User Id From jwt
+    String userId = myUtils.getUserId();
 
     // Create an Image entity to save to the database
     Image image = Image.builder()

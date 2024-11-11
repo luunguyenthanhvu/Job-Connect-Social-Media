@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,30 +31,29 @@ public class ImageController {
   private ImageService imageService;
 
   @PostMapping("/upload")
+  @PreAuthorize("hasRole('USER') or hasRole('EMPLOYER') or hasRole('ADMIN')")
   public ApiResponse<ImageResponseDTO> uploadImage(
       @RequestPart("file") MultipartFile file,
-      @RequestParam("userId") String userId,
       @RequestParam("postId") String postId,
       @RequestParam("type") String type) {
     {
       String imageUrl = "";
-      EImageType eImageType = EImageType.USER_PROFILE;
+      EImageType eImageType = null;
       try {
         switch (type) {
-          case "profile":
-//            eImageType = EImageType.USER_PROFILE;
-            break;
           case "post":
             eImageType = EImageType.POST_IMAGE;
             break;
+          default:
+            eImageType = EImageType.USER_PROFILE;
+            break;
         }
 
-        imageUrl = cloudinaryService.uploadImage(file, userId, postId,
+        imageUrl = cloudinaryService.uploadImage(file, postId,
             EImageType.USER_PROFILE);
         // Create DTO response
         ImageResponseDTO responseDTO = ImageResponseDTO.builder()
             .imageUrl(imageUrl)
-            .userId(userId)
             .postId(postId)
             .type(eImageType.name())
             .build();
@@ -70,6 +70,7 @@ public class ImageController {
   }
 
   @GetMapping("/search")
+  @PreAuthorize("hasRole('USER') or hasRole('EMPLOYER') or hasRole('ADMIN')")
   public ApiResponse<List<ImageResponseDTO>> searchImages(
       ImageSearchRequestDTO searchRequest) {
     try {
