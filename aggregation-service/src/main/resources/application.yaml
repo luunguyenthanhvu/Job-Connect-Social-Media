@@ -6,3 +6,12 @@ server:
 spring:
   application:
     name: aggregation-service
+
+eureka:
+  client:
+    server-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true

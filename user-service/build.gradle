@@ -35,7 +35,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-
+    // Eureka Client
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     // MapStruct dependencies
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"

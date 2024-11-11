@@ -24,4 +24,11 @@ cloudinary:
   api_key: 899244476586798
   api_secret: 3uCxvocAtzZCFX0BqvXPhYcGMXg
 
-
+eureka:
+  client:
+    server-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true

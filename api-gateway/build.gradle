@@ -6,39 +6,30 @@ plugins {
 
 group = 'vuluu'
 version = '0.0.1-SNAPSHOT'
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-ext {
-    mapstructVersion = "1.6.1"
-    lombokVersion = "1.18.20"
-    lombokMapstructBindingVersion = "0.2.0"
-}
-
 repositories {
     mavenCentral()
 }
+
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.1" // Thay đổi phiên bản bom
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.1"
+        // BOM quản lý phiên bản cho Spring Cloud
     }
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    // Eureka Client
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
