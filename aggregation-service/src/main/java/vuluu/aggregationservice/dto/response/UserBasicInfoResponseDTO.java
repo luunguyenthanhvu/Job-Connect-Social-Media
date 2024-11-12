@@ -9,18 +9,15 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponseDTO {
+public class UserBasicInfoResponseDTO {
 
   String id;
   String username;
   String email;
-  String phoneNumber;
-  boolean verified;
-  String description;
-  String img;
   Set<RoleResponseDTO> roles;
+  String imageUrl;
 }

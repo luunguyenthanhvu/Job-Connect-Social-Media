@@ -37,8 +37,6 @@ dependencies {
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    // Eureka Client
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     // Spring Kafka (to use Kafka in your Spring Boot project)
     implementation 'org.springframework.kafka:spring-kafka'

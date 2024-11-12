@@ -1,8 +1,6 @@
 package vuluu.fileservice.controller;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import vuluu.fileservice.dto.request.ImageSearchRequestDTO;
 import vuluu.fileservice.dto.response.ApiResponse;
 import vuluu.fileservice.dto.response.ImageResponseDTO;
-import vuluu.fileservice.entity.Image;
 import vuluu.fileservice.enums.EImageType;
 import vuluu.fileservice.service.CloudinaryService;
 import vuluu.fileservice.service.ImageService;
@@ -71,30 +67,9 @@ public class ImageController {
 
   @GetMapping("/search")
   @PreAuthorize("hasRole('USER') or hasRole('EMPLOYER') or hasRole('ADMIN')")
-  public ApiResponse<List<ImageResponseDTO>> searchImages(
-      ImageSearchRequestDTO searchRequest) {
-    try {
-      List<Image> images = imageService.searchImages(searchRequest);
-      List<ImageResponseDTO> imageResponseList = images.stream().map(image -> {
-        return ImageResponseDTO.builder()
-            .id(image.getId())
-            .imageUrl(image.getImageUrl())
-            .type(image.getType().name())
-            .build();
-      }).collect(Collectors.toList());
-
-      return ApiResponse.<List<ImageResponseDTO>>builder()
-          .code(1000)
-          .message("Images found")
-          .result(imageResponseList)
-          .build();
-
-
-    } catch (Exception e) {
-      return ApiResponse.<List<ImageResponseDTO>>builder()
-          .code(500)
-          .message("Error retrieving images: " + e.getMessage())
-          .build();
-    }
+  public ApiResponse<String> searchImages(
+      @RequestParam("postId") String postId) {
+    return ApiResponse.<String>builder()
+        .result(imageService.searchImages(postId).get(0).getImageUrl()).build();
   }
 }

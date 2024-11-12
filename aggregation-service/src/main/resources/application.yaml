@@ -2,7 +2,6 @@ server:
   port: 8085
   servlet:
     context-path: /aggregation-service
-
 spring:
   application:
     name: aggregation-service

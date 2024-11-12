@@ -27,6 +27,10 @@ public interface UserMapper {
   @Mapping(target = "id", source = "id")
   @Mapping(target = "username", source = "username")
   @Mapping(target = "roles", source = "roles")
+  @Mapping(target = "email", source = "email")
+  @Mapping(target = "phoneNumber", source = "phoneNumber")
+  @Mapping(target = "verified", source = "verified")
+  @Mapping(target = "description", source = "description")
   UserResponseDTO toUserResponseDTO(User user);
 
   @Mapping(target = "permissionResponseDTOS", ignore = true)

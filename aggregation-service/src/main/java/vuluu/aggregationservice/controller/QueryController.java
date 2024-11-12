@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import vuluu.aggregationservice.dto.response.ApiResponse;
@@ -20,9 +21,9 @@ public class QueryController {
   UserAggregationService aggregationService;
 
   @GetMapping("/user-info")
-  public Mono<ApiResponse<UserResponseDTO>> getUserById() {
-    System.out.println("Vào được user- info");
-    return aggregationService.getUserInfo();
+  public Mono<ApiResponse<UserResponseDTO>> getUserById(
+      @RequestParam("postId") String postId) {
+    return aggregationService.getUserInfo(postId);
   }
 
 }

@@ -17,5 +17,9 @@ public class UserResponseDTO {
 
   String id;
   String username;
+  String email;
+  String phoneNumber;
+  boolean verified;
+  String description;
   Set<RoleResponseDTO> roles;
 }

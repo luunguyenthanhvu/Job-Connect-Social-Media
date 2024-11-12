@@ -44,7 +44,7 @@ public class EmailService {
     String apiKey;
     try {
       htmlContent = new String(Files.readAllBytes(Paths.get(
-          "C:\\Users\\PC\\Desktop\\Graduate Thesis\\Job-Connect-Social-Media\\notification-service\\src\\main\\resources\\templates\\index.html")));
+          "C:\\Users\\PC\\Desktop\\Graduate Thesis-BackEnd\\Job-Connect-Social-Media\\notification-service\\src\\main\\resources\\templates\\index.html")));
       apiKey = Files.readString(Path.of(apiKeyPath));
     } catch (IOException e) {
       log.error(e.toString());

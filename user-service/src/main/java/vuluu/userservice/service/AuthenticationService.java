@@ -72,7 +72,7 @@ public class AuthenticationService {
 
     Date issueTime = new Date();
     Date expireTime = new Date(Instant.ofEpochMilli(issueTime.getTime())
-        .plus(1, ChronoUnit.HOURS)
+        .plus(30, ChronoUnit.DAYS)
         .toEpochMilli());
 
     JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()

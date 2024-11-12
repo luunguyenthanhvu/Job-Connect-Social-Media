@@ -25,19 +25,22 @@ public class WebClientConfiguration {
   @Bean
   @LoadBalanced
   public WebClient.Builder webClientBuilder() {
+    log.info("Vào web client builder");
     return WebClient.builder()
         .filter(ExchangeFilterFunction.ofRequestProcessor(clientRequest ->
             Mono.deferContextual(contextView -> {
               // Lấy JWT từ Reactor Context
               String jwt = contextView.getOrDefault("jwt", null);
+              log.info("có jwt");
               log.info("JWT in WebClient: " + jwt);
               if (jwt != null) {
                 // Thêm JWT vào header Authorization của yêu cầu
                 ClientRequest modifiedRequest = ClientRequest.from(clientRequest)
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
+                    .header(HttpHeaders.AUTHORIZATION,  jwt)
                     .build();
                 return Mono.just(modifiedRequest);
               }
+              log.info("Không có jwt");
               return Mono.just(clientRequest); // Trả về request gốc nếu không có JWT
             })
         ));
