@@ -106,4 +106,10 @@ public class UserService {
     throw new AppException(ErrorCode.VERIFY_TIME_OUT);
   }
 
+  public UserResponseDTO getUser() {
+    String userId = myUtils.getUserId();
+    return userMapper.toUserResponseDTO(userRepository.findById(userId).get());
+  }
+
+
 }

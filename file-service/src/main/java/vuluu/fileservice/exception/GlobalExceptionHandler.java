@@ -8,7 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import vuluu.userservice.dto.response.ApiResponse;
+import vuluu.fileservice.dto.response.ApiResponse;
+
 
 @ControllerAdvice
 @Slf4j

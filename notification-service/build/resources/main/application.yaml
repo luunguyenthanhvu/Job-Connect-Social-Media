@@ -23,3 +23,13 @@ spring:
         spring.json.value.default.type: vuluu.notificationservice.dto.request.SendEmailRequestDTO
     topics:
       user-register: USER_REGISTER
+      suggest-job-user: SUGGEST_JOB
+      user-matching: MATCHING_USER
+eureka:
+  client:
+    server-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true

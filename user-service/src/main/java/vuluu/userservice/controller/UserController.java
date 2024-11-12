@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vuluu.userservice.dto.response.ApiResponse;
+import vuluu.userservice.dto.response.UserResponseDTO;
 import vuluu.userservice.repository.UserRepository;
+import vuluu.userservice.service.UserService;
 
 @RestController
 @RequestMapping("/users")
@@ -19,6 +21,7 @@ import vuluu.userservice.repository.UserRepository;
 public class UserController {
 
   UserRepository userRepository;
+  UserService userService;
 
   @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
   @GetMapping("/get-all")
@@ -27,8 +30,11 @@ public class UserController {
         .result(userRepository.findAll()).build();
   }
 
-  ApiResponse<?> setUpAccount() {
-    return null;
+  @PreAuthorize("hasRole('USER') or hasRole('EMPLOYER') or hasRole('ADMIN')")
+  @GetMapping("/get-info")
+  ApiResponse<UserResponseDTO> getUserInfo() {
+    return ApiResponse.<UserResponseDTO>builder()
+        .result(userService.getUser()).build();
   }
 
 }

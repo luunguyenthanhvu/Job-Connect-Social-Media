@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import vuluu.fileservice.dto.request.ImageSearchRequestDTO;
 import vuluu.fileservice.entity.Image;
 import vuluu.fileservice.repository.ImageRepository;
+import vuluu.fileservice.util.MyUtils;
 
 @Service
 @Slf4j
@@ -17,15 +17,15 @@ import vuluu.fileservice.repository.ImageRepository;
 public class ImageService {
 
   ImageRepository imageRepository;
+  MyUtils myUtils;
 
   // Phương thức tìm kiếm hình ảnh theo userId hoặc postId
-  public List<Image> searchImages(ImageSearchRequestDTO searchRequest) {
-    if (searchRequest.getUserId() != null) {
-      return imageRepository.findByUserId(searchRequest.getUserId());
-    } else if (searchRequest.getPostId() != null) {
-      return imageRepository.findByPostId(searchRequest.getPostId());
+  public List<Image> searchImages(String postId) {
+    String userId = myUtils.getUserId();
+    if (postId != null || !postId.isEmpty()) {
+      return imageRepository.findByUserIdAndPostId(userId, postId);
     } else {
-      throw new IllegalArgumentException("Either userId or postId must be provided");
+      return imageRepository.findByUserId(userId);
     }
   }
 }

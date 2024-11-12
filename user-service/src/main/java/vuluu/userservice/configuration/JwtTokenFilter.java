@@ -36,7 +36,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
       FilterChain filterChain) throws ServletException, IOException {
     String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
     if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-
+      log.error("has jwt code");
       String token = authorizationHeader.substring(7);
 
       // Decode the token
@@ -53,6 +53,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
       UsernamePasswordAuthenticationToken authentication =
           new UsernamePasswordAuthenticationToken(userId, null, authorities);
       SecurityContextHolder.getContext().setAuthentication(authentication);
+    } else {
+      log.error("No jwt code");
     }
 
     filterChain.doFilter(request, response);

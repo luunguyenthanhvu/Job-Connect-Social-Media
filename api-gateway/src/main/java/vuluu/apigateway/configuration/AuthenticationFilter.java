@@ -60,7 +60,12 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     return identityService.introspect(token).flatMap(response -> {
       log.info(String.valueOf(response));
       if (response.getResult().isValid()) {
-        return chain.filter(exchange);
+        ServerHttpRequest modifiedRequest = exchange.getRequest()
+            .mutate()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .build();
+        ServerWebExchange modifiedExchange = exchange.mutate().request(modifiedRequest).build();
+        return chain.filter(modifiedExchange);
       } else {
         return unauthenticated(exchange.getResponse());
       }
