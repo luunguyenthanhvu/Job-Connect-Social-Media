@@ -25,6 +25,11 @@ spring:
       user-register: USER_REGISTER
       suggest-job-user: SUGGEST_JOB
       user-matching: MATCHING_USER
+  devtools:
+    restart:
+      enabled: false
+    remote:
+      enabled: false
 eureka:
   client:
     server-url:

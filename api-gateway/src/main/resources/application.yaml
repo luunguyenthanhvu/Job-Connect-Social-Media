@@ -8,7 +8,11 @@ app:
 spring:
   application:
     name: api-gateway
-
+  devtools:
+    restart:
+      enabled: false
+    remote:
+      enabled: false
   cloud:
     gateway:
       discovery:

@@ -18,7 +18,11 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
-
+  devtools:
+    restart:
+      enabled: false
+    remote:
+      enabled: false
 cloudinary:
   cloud_name: dter3mlpl
   api_key: 899244476586798
