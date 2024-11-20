@@ -25,6 +25,7 @@ spring:
       user-register: USER_REGISTER
       suggest-job-user: SUGGEST_JOB
       user-matching: MATCHING_USER
+      reset-password: RESET_PASSWORD
   devtools:
     restart:
       enabled: false

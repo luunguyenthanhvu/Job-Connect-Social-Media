@@ -31,7 +31,19 @@ public class NotificationConsumerService {
       throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
     }
     log.info(String.valueOf(requestDTO));
-    emailService.sendEmail(requestDTO);
+    emailService.sendEmailVerify(requestDTO);
+  }
+
+  @KafkaListener(topics = "${spring.kafka.topics.reset-password}", groupId = "${spring.kafka.consumer.group-id}")
+  public void listenResetPassRegister(String jsonMessage) {
+    SendEmailRequestDTO requestDTO = null;
+    try {
+      requestDTO = objectMapper.readValue(jsonMessage, SendEmailRequestDTO.class);
+    } catch (JsonProcessingException e) {
+      throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
+    }
+    log.info(String.valueOf(requestDTO));
+    emailService.sendEmailResetPass(requestDTO);
   }
 
   @KafkaListener(topics = "${spring.kafka.topics.suggest-job-user}", groupId = "${spring.kafka.consumer.group-id}")

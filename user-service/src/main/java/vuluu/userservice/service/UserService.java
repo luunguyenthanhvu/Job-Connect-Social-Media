@@ -23,6 +23,7 @@ import vuluu.userservice.mapper.UserMapper;
 import vuluu.userservice.repository.RoleRepository;
 import vuluu.userservice.repository.UserRepository;
 import vuluu.userservice.service.kafka_producer.EmailProducer;
+import vuluu.userservice.service.kafka_producer.ResetPasswordProducer;
 import vuluu.userservice.util.MyUtils;
 
 @Service
@@ -37,6 +38,7 @@ public class UserService {
   PasswordEncoder passwordEncoder;
   UserMapper userMapper;
   EmailProducer emailProducer;
+  ResetPasswordProducer resetPasswordProducer;
   String VERIFY_SUCCESS = "Your Account is verify.";
   String VERIFIED = "Your account has been verified.";
 
@@ -72,7 +74,7 @@ public class UserService {
 
     // check if verified
     if (user.isVerified()) {
-      return MessageResponseDTO.builder().message(VERIFIED).build();
+      throw new AppException(ErrorCode.USER_VERIFIED);
     }
 
     // check code
@@ -111,5 +113,45 @@ public class UserService {
     return userMapper.toUserResponseDTO(userRepository.findById(userId).get());
   }
 
+  @Transactional
+  public MessageResponseDTO resendCode(String email) {
+    var user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+    // check if verified
+    if (user.isVerified()) {
+      throw new AppException(ErrorCode.USER_VERIFIED);
+    }
+
+    // update verification sent date
+    user.setVerificationSentDate(LocalDateTime.now());
+
+    //update code
+    String code = myUtils.generateVerificationCode();
+    user.setVerifyCode(code);
+
+    userRepository.save(user);
+
+    // using kafka to send email to notification service
+    emailProducer.sendEmail(user);
+
+    return MessageResponseDTO.builder().message("Resend code successfully").build();
+  }
+
+  @Transactional
+  public MessageResponseDTO resetPassword(String email) {
+    var user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+    String password = myUtils.generatePassword();
+    user.setPassword(passwordEncoder.encode(password));
+
+    // update user password
+    userRepository.save(user);
+
+    // using kafka to send new pass to user email
+    resetPasswordProducer.sendResetPass(user, password);
+    return MessageResponseDTO.builder().message("Reset password successfully").build();
+  }
 
 }

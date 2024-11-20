@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import vuluu.userservice.dto.request.AccountVerifyRequestDTO;
 import vuluu.userservice.dto.request.AuthenticationRequestDTO;
 import vuluu.userservice.dto.request.CreateAccountRequestDTO;
+import vuluu.userservice.dto.request.ResendVerifyCodeRequestDTO;
 import vuluu.userservice.dto.response.ApiResponse;
 import vuluu.userservice.dto.response.AuthenticationResponseDTO;
 import vuluu.userservice.dto.response.MessageResponseDTO;
@@ -47,4 +48,19 @@ public class AuthenticationController {
     return ApiResponse.<MessageResponseDTO>builder()
         .result(userService.verifyAccount(requestDTO)).build();
   }
+
+  @PostMapping("/resend-verify-code")
+  ApiResponse<MessageResponseDTO> resendVerifyCode(
+      @RequestBody @Valid ResendVerifyCodeRequestDTO requestDTO) {
+    return ApiResponse.<MessageResponseDTO>builder()
+        .result(userService.resendCode(requestDTO.getEmail())).build();
+  }
+
+  @PostMapping("/reset-password")
+  ApiResponse<MessageResponseDTO> resetPassword(
+      @RequestBody @Valid ResendVerifyCodeRequestDTO requestDTO) {
+    return ApiResponse.<MessageResponseDTO>builder()
+        .result(userService.resetPassword(requestDTO.getEmail())).build();
+  }
+
 }
