@@ -40,7 +40,7 @@ public class UserService {
   EmailProducer emailProducer;
   ResetPasswordProducer resetPasswordProducer;
   String VERIFY_SUCCESS = "Your Account is verify.";
-  String VERIFIED = "Your account has been verified.";
+  String VERIFY_TIME_OUT = "Verify code out date.";
 
   @Transactional
   public UserResponseDTO createUser(CreateAccountRequestDTO requestDTO) {
@@ -102,8 +102,8 @@ public class UserService {
       userRepository.save(user);
       System.out.println("Đã update code verify");
       // using kafka to send email to notification service
-//      emailProducer.sendEmail(user);
-      throw new AppException(ErrorCode.VERIFY_TIME_OUT);
+      emailProducer.sendEmail(user);
+      return MessageResponseDTO.builder().message(VERIFY_TIME_OUT).build();
     }
   }
 
