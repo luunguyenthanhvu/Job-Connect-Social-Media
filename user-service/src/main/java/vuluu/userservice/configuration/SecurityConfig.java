@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,7 +25,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  String[] PUBLIC_ENDPOINTS = {"/auth/token","/auth/registration", "/auth/verify"};
+  String[] PUBLIC_ENDPOINTS = {"/auth/token", "/auth/resend-verify-code",
+      "/auth/registration", "/auth/verify", "/auth/reset-password"};
 
   CustomJwtDecoder customJwtDecoder;
 

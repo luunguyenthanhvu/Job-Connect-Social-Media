@@ -100,12 +100,11 @@ public class UserService {
       user.setVerifyCode(code);
 
       userRepository.save(user);
-
+      System.out.println("Đã update code verify");
       // using kafka to send email to notification service
-      emailProducer.sendEmail(user);
+//      emailProducer.sendEmail(user);
+      throw new AppException(ErrorCode.VERIFY_TIME_OUT);
     }
-
-    throw new AppException(ErrorCode.VERIFY_TIME_OUT);
   }
 
   public UserResponseDTO getUser() {
