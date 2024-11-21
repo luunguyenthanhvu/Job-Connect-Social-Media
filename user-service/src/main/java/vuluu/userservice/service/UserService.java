@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -106,7 +107,9 @@ public class UserService {
       return MessageResponseDTO.builder().message(VERIFY_TIME_OUT).build();
     }
   }
-
+  // Phương thức tìm kiếm hình ảnh theo userId hoặc postId
+  // Redis Cacheable check cho file dữ liệu
+  @Cacheable(value = "userInfoCache", key = "'userInfo:' + #userId", unless = "#result == null")
   public UserResponseDTO getUser() {
     String userId = myUtils.getUserId();
     return userMapper.toUserResponseDTO(userRepository.findById(userId).get());

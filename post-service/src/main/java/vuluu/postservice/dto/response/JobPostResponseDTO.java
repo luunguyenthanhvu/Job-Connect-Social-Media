@@ -2,6 +2,7 @@ package vuluu.postservice.dto.response;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import java.io.Serializable;
 import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ import vuluu.postservice.enums.EEmploymentType;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JobPostResponseDTO {
+public class JobPostResponseDTO implements Serializable {
 
   String title;
   @Enumerated(value = EnumType.STRING)

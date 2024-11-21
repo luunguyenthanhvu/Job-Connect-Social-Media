@@ -23,6 +23,14 @@ spring:
       enabled: false
     remote:
       enabled: false
+  cache:
+    type: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+
 cloudinary:
   cloud_name: dter3mlpl
   api_key: 899244476586798

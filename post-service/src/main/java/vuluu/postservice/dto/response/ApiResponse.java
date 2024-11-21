@@ -2,6 +2,7 @@ package vuluu.postservice.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(Include.NON_NULL)
-public class ApiResponse<T> {
+public class ApiResponse<T> implements Serializable {
 
   @Builder.Default
   int code = 1000;

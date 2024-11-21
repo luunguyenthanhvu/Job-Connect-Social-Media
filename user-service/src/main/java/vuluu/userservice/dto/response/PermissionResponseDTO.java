@@ -1,5 +1,6 @@
 package vuluu.userservice.dto.response;
 
+import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PermissionResponseDTO {
+public class PermissionResponseDTO implements Serializable {
     String name;
     String description;
 }
