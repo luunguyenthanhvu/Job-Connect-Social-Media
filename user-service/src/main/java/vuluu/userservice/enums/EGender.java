@@ -1,7 +1,7 @@
 package vuluu.userservice.enums;
 
 public enum EGender {
-  MALE("MALE"), FEMALE("FEMALE"), COMPANY("COMPANY");
+  MALE("MALE"), FEMALE("FEMALE");
   private final String text;
 
   private EGender(String text) {

@@ -16,14 +16,13 @@ public interface ApplicantMapper {
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "user", ignore = true)
+  @Mapping(target = "educations", ignore = true)
+  @Mapping(target = "workExperiences", ignore = true)
   @Mapping(target = "firstname", source = "requestDTO.firstname")
   @Mapping(target = "lastname", source = "requestDTO.lastname")
   @Mapping(target = "dob", source = "requestDTO.dob")
-  @Mapping(target = "summary", source = "requestDTO.summary")
-  @Mapping(target = "educationList", source = "requestDTO.educationList")
-  @Mapping(target = "workExperiences", source = "requestDTO.workExperiences")
+  @Mapping(target = "objective", source = "requestDTO.objective")
   @Mapping(target = "skills", source = "requestDTO.skills")
-  @Mapping(target = "certifications", source = "requestDTO.certifications")
   Applicant toApplicant(CreateAccountApplicantRequestDTO requestDTO,
       @Context AddressService addressService);
 
@@ -33,3 +32,4 @@ public interface ApplicantMapper {
     addressService.saveListAddress(requestDTO.getAddress());
   }
 }
+

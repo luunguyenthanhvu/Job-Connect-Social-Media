@@ -71,6 +71,7 @@ public class User implements Serializable {
   private LocalDateTime verificationSentDate = LocalDateTime.now();
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+  @Default
   Set<Address> addresses = new HashSet<>();
 
   @ManyToMany(fetch = FetchType.EAGER)
@@ -79,5 +80,6 @@ public class User implements Serializable {
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id")
   )
+  @Default
   private Set<Role> roles = new HashSet<>();
 }
