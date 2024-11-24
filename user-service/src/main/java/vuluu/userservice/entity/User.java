@@ -1,5 +1,6 @@
 package vuluu.userservice.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -70,7 +71,7 @@ public class User implements Serializable {
   @Default
   private LocalDateTime verificationSentDate = LocalDateTime.now();
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @Default
   Set<Address> addresses = new HashSet<>();
 

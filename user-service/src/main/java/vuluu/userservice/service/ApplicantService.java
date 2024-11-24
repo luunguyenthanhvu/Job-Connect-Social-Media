@@ -12,12 +12,13 @@ import vuluu.userservice.dto.request.CreateAccountApplicantRequestDTO;
 import vuluu.userservice.dto.request.EducationRequestDTO;
 import vuluu.userservice.dto.request.WorkExperienceRequestDTO;
 import vuluu.userservice.dto.response.MessageResponseDTO;
+import vuluu.userservice.entity.Address;
 import vuluu.userservice.entity.Applicant;
 import vuluu.userservice.entity.Education;
 import vuluu.userservice.entity.WorkExperience;
 import vuluu.userservice.exception.AppException;
 import vuluu.userservice.exception.ErrorCode;
-import vuluu.userservice.mapper.ApplicantMapper;
+import vuluu.userservice.mapper.ToApplicantMapper;
 import vuluu.userservice.repository.ApplicantRepository;
 import vuluu.userservice.repository.EmployerRepository;
 import vuluu.userservice.repository.UserRepository;
@@ -32,7 +33,7 @@ public class ApplicantService {
   AddressService addressService;
   UserRepository userRepository;
   ApplicantRepository applicantRepository;
-  ApplicantMapper applicantMapper;
+  ToApplicantMapper toApplicantMapper;
   MyUtils myUtils;
 
   @Transactional
@@ -49,7 +50,7 @@ public class ApplicantService {
     }
 
     // map from dto to entity
-    var applicant = applicantMapper.toApplicant(requestDTO, addressService);
+    var applicant = toApplicantMapper.toApplicant(requestDTO, addressService);
     applicant.setUser(user);
 
     // setting education for applicant
