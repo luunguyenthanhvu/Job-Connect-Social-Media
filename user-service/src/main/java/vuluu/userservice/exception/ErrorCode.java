@@ -19,7 +19,9 @@ public enum ErrorCode {
   NOT_YET_AUTHENTICATED(1010, "Please check your email for authenticate.", HttpStatus.BAD_REQUEST),
   VERIFY_TIME_OUT(1011, "Verify code out date. Please verify again.", HttpStatus.BAD_REQUEST),
   WRONG_VERIFY_CODE(1012, "Verify code wrong. Please enter again.", HttpStatus.BAD_REQUEST),
-  JOB_NOT_EXISTED(1013, "Job not found!", HttpStatus.BAD_REQUEST);
+  JOB_NOT_EXISTED(1013, "Job not found!", HttpStatus.BAD_REQUEST),
+  USER_VERIFIED(1014, "User has already been verified!", HttpStatus.BAD_REQUEST);
+
 
   ErrorCode(int code, String message, HttpStatusCode statusCode) {
     this.code = code;

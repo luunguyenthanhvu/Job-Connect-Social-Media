@@ -1,5 +1,6 @@
 package vuluu.postservice.dto.response;
 
+import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JobSkillExtractResponseDTO {
+public class JobSkillExtractResponseDTO implements Serializable {
 
   String jobId;
   String[] userId;

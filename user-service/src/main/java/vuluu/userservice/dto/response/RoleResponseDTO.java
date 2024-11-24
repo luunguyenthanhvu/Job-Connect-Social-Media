@@ -1,5 +1,6 @@
 package vuluu.userservice.dto.response;
 
+import java.io.Serializable;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoleResponseDTO {
+public class RoleResponseDTO implements Serializable {
 
   String roleName;
   String description;

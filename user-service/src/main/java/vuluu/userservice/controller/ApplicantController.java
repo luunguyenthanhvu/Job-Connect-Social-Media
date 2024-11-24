@@ -25,7 +25,7 @@ public class ApplicantController {
 
   @PreAuthorize("hasRole('USER')")
   @PostMapping("/create")
-  public ApiResponse<MessageResponseDTO> createEmployerAccount(@RequestBody
+  public ApiResponse<MessageResponseDTO> createApplicantAccount(@RequestBody
   CreateAccountApplicantRequestDTO requestDTO) {
     return ApiResponse.<MessageResponseDTO>builder()
         .result(applicantService.createApplicantAccount(requestDTO)).build();

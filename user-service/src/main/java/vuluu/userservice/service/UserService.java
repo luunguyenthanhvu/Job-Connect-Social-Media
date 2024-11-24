@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import vuluu.userservice.mapper.UserMapper;
 import vuluu.userservice.repository.RoleRepository;
 import vuluu.userservice.repository.UserRepository;
 import vuluu.userservice.service.kafka_producer.EmailProducer;
+import vuluu.userservice.service.kafka_producer.ResetPasswordProducer;
 import vuluu.userservice.util.MyUtils;
 
 @Service
@@ -37,8 +39,9 @@ public class UserService {
   PasswordEncoder passwordEncoder;
   UserMapper userMapper;
   EmailProducer emailProducer;
+  ResetPasswordProducer resetPasswordProducer;
   String VERIFY_SUCCESS = "Your Account is verify.";
-  String VERIFIED = "Your account has been verified.";
+  String VERIFY_TIME_OUT = "Verify code out date.";
 
   @Transactional
   public UserResponseDTO createUser(CreateAccountRequestDTO requestDTO) {
@@ -72,7 +75,7 @@ public class UserService {
 
     // check if verified
     if (user.isVerified()) {
-      return MessageResponseDTO.builder().message(VERIFIED).build();
+      throw new AppException(ErrorCode.USER_VERIFIED);
     }
 
     // check code
@@ -98,18 +101,59 @@ public class UserService {
       user.setVerifyCode(code);
 
       userRepository.save(user);
-
+      System.out.println("Đã update code verify");
       // using kafka to send email to notification service
       emailProducer.sendEmail(user);
+      return MessageResponseDTO.builder().message(VERIFY_TIME_OUT).build();
     }
-
-    throw new AppException(ErrorCode.VERIFY_TIME_OUT);
   }
-
+  // Phương thức tìm kiếm hình ảnh theo userId hoặc postId
+  // Redis Cacheable check cho file dữ liệu
+  @Cacheable(value = "userInfoCache", key = "'userInfo:' + #userId", unless = "#result == null")
   public UserResponseDTO getUser() {
     String userId = myUtils.getUserId();
     return userMapper.toUserResponseDTO(userRepository.findById(userId).get());
   }
 
+  @Transactional
+  public MessageResponseDTO resendCode(String email) {
+    var user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+    // check if verified
+    if (user.isVerified()) {
+      throw new AppException(ErrorCode.USER_VERIFIED);
+    }
+
+    // update verification sent date
+    user.setVerificationSentDate(LocalDateTime.now());
+
+    //update code
+    String code = myUtils.generateVerificationCode();
+    user.setVerifyCode(code);
+
+    userRepository.save(user);
+
+    // using kafka to send email to notification service
+    emailProducer.sendEmail(user);
+
+    return MessageResponseDTO.builder().message("Resend code successfully").build();
+  }
+
+  @Transactional
+  public MessageResponseDTO resetPassword(String email) {
+    var user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+    String password = myUtils.generatePassword();
+    user.setPassword(passwordEncoder.encode(password));
+
+    // update user password
+    userRepository.save(user);
+
+    // using kafka to send new pass to user email
+    resetPasswordProducer.sendResetPass(user, password);
+    return MessageResponseDTO.builder().message("Reset password successfully").build();
+  }
 
 }

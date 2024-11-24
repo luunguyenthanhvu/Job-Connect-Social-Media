@@ -18,6 +18,19 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+  devtools:
+    restart:
+      enabled: false
+    remote:
+      enabled: false
+  cache:
+    type: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+
   kafka:
     bootstrap-servers: "${HOST_IP_ADDRESS:localhost}:19092,${HOST_IP_ADDRESS:localhost}:29092,${HOST_IP_ADDRESS:localhost}:39092"
     producer:

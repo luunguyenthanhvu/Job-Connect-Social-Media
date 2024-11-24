@@ -20,7 +20,7 @@ public class QueryController {
 
   UserAggregationService aggregationService;
 
-  @GetMapping("/user-info")
+  @GetMapping("/user-basic-info")
   public Mono<ApiResponse<UserResponseDTO>> getUserById(
       @RequestParam("postId") String postId) {
     return aggregationService.getUserInfo(postId);

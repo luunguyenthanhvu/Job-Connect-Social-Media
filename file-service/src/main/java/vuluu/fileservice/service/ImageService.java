@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import vuluu.fileservice.entity.Image;
 import vuluu.fileservice.repository.ImageRepository;
@@ -20,6 +21,8 @@ public class ImageService {
   MyUtils myUtils;
 
   // Phương thức tìm kiếm hình ảnh theo userId hoặc postId
+  // Redis Cacheable check cho file dữ liệu
+  @Cacheable(value = "fileInfoCache", key = "'file:' + #userId", unless = "#result == null")
   public List<Image> searchImages(String postId) {
     String userId = myUtils.getUserId();
     if (postId != null || !postId.isEmpty()) {

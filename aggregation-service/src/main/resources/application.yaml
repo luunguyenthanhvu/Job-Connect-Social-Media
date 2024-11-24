@@ -5,6 +5,11 @@ server:
 spring:
   application:
     name: aggregation-service
+  devtools:
+    restart:
+      enabled: false
+    remote:
+      enabled: false
 
 eureka:
   client:

@@ -1,5 +1,6 @@
 package vuluu.fileservice.dto.response;
 
+import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ImageResponseDTO {
+public class ImageResponseDTO implements Serializable {
 
   Long id;
   String imageUrl;

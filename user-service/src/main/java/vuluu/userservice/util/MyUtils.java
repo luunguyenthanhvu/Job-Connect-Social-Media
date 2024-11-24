@@ -9,6 +9,7 @@ public class MyUtils {
 
   private static final String CHARACTERS = "abcdefjghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   private static final int CODE_LENGTH = 6;
+  private static final int REST_PASS_LENGTH = 10;
   private static final SecureRandom RANDOM = new SecureRandom();
 
   /**
@@ -32,5 +33,19 @@ public class MyUtils {
    */
   public String getUserId() {
     return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  }
+
+  /**
+   * This method to auto generate auto password
+   *
+   * @return password
+   */
+  public String generatePassword() {
+    StringBuilder code = new StringBuilder(REST_PASS_LENGTH);
+    for (int i = 0; i < REST_PASS_LENGTH; i++) {
+      int index = RANDOM.nextInt(CHARACTERS.length());
+      code.append(CHARACTERS.charAt(index));
+    }
+    return code.toString();
   }
 }

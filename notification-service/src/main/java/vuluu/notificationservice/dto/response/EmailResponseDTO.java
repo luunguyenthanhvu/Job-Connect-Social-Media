@@ -1,5 +1,6 @@
 package vuluu.notificationservice.dto.response;
 
+import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EmailResponseDTO {
+public class EmailResponseDTO implements Serializable {
 
   String messageId;
 }
