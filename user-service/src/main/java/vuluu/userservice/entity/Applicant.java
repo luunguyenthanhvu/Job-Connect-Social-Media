@@ -53,6 +53,9 @@ public class Applicant implements Serializable {
   @Enumerated(EnumType.STRING)
   private EGender gender;
 
+  @Column(name = "position")
+  private String position;
+
   @Column(name = "objective", columnDefinition = "TEXT")
   private String objective;
   @OneToMany(mappedBy = "applicant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
