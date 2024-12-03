@@ -17,7 +17,6 @@ public interface EmployerMapper {
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "user", ignore = true)
-  @Mapping(target = "website", source = "requestDTO.website")
   @Mapping(target = "country", source = "requestDTO.country")
   @Mapping(target = "industry", source = "requestDTO.industry")
   Employer toEmployer(CreateAccountEmployerRequestDTO requestDTO,

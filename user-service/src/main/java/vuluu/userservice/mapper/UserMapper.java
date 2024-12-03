@@ -21,6 +21,7 @@ public interface UserMapper {
   @Mapping(target = "roles", ignore = true)
   @Mapping(target = "verifyCode", ignore = true)
   @Mapping(target = "addresses", ignore = true)
+  @Mapping(target = "website", ignore = true)
   @Mapping(target = "verificationSentDate", ignore = true)
   User toUser(CreateAccountRequestDTO requestDTO);
 

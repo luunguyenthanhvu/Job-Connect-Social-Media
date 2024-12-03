@@ -56,6 +56,7 @@ public class EmployerService {
         .ifPresent(roles::add);
     user.setRoles(roles);
     user.setDescription(requestDTO.getDescription());
+    user.setWebsite(requestDTO.getWebsite());
 
     // save updated role
     userRepository.save(user);

@@ -22,7 +22,6 @@ public class EmployerMapperImpl implements EmployerMapper {
 
         Employer employer = new Employer();
 
-        employer.setWebsite( requestDTO.getWebsite() );
         employer.setCountry( requestDTO.getCountry() );
         employer.setIndustry( requestDTO.getIndustry() );
 

@@ -67,6 +67,9 @@ public class User implements Serializable {
   @Default
   LocalDateTime createdDate = LocalDateTime.now();
 
+  @Column(name = "website")
+  String website;
+
   @Column(name = "verificationSentDate")
   @Default
   private LocalDateTime verificationSentDate = LocalDateTime.now();

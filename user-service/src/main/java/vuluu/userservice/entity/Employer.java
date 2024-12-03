@@ -30,9 +30,6 @@ public class Employer implements Serializable {
   @MapsId
   private User user;
 
-  @Column(name = "website")
-  String website;
-
   @Column(name = "country")
   String country;
 
