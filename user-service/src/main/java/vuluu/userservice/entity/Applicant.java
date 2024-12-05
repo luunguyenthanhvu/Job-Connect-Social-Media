@@ -17,12 +17,15 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import vuluu.userservice.enums.EGender;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -58,10 +61,19 @@ public class Applicant implements Serializable {
 
   @Column(name = "objective", columnDefinition = "TEXT")
   private String objective;
+
+  @Default
   @OneToMany(mappedBy = "applicant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Education> educations = new HashSet<>();
+
+  @Default
   @OneToMany(mappedBy = "applicant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   Set<WorkExperience> workExperiences = new HashSet<>();
+
+  @Default
+  @OneToMany(mappedBy = "applicant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  Set<Project> projects = new HashSet<>();
+
   @Column(name = "skills", columnDefinition = "TEXT")
   private String skills;
 }

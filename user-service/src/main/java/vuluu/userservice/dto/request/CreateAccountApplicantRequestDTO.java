@@ -25,6 +25,7 @@ public class CreateAccountApplicantRequestDTO {
   String objective;
   List<EducationRequestDTO> educationRequestDTO;
   List<WorkExperienceRequestDTO> workExperienceRequestDTO;
+  List<ProjectRequestDTO> projectRequestDTO;
   String skills;
   String[] address;
 }
