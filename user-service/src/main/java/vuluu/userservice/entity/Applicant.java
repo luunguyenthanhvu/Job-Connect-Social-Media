@@ -49,6 +49,10 @@ public class Applicant implements Serializable {
   @Column(name = "lastname", nullable = false)
   private String lastname;
 
+
+  @Column(name = "userEmail", nullable = false)
+  private String userEmail;
+
   @Column(name = "dob")
   private Date dob;
 

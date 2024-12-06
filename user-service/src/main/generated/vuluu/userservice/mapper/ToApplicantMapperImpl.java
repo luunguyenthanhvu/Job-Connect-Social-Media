@@ -8,7 +8,7 @@ import vuluu.userservice.service.AddressService;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-24T17:39:49+0700",
+    date = "2024-12-06T13:05:31+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 17.0.9 (JetBrains s.r.o.)"
 )
 @Component
@@ -24,10 +24,12 @@ public class ToApplicantMapperImpl implements ToApplicantMapper {
 
         applicant.setFirstname( requestDTO.getFirstname() );
         applicant.setLastname( requestDTO.getLastname() );
+        applicant.setUserEmail( requestDTO.getUserEmail() );
         applicant.setDob( requestDTO.getDob() );
+        applicant.setPosition( requestDTO.getPosition() );
+        applicant.setGender( requestDTO.getGender() );
         applicant.setObjective( requestDTO.getObjective() );
         applicant.setSkills( requestDTO.getSkills() );
-        applicant.setGender( requestDTO.getGender() );
 
         mapAddress( applicant, requestDTO, addressService );
 

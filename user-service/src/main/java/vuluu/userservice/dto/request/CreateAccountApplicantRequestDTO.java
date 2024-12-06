@@ -21,6 +21,7 @@ public class CreateAccountApplicantRequestDTO {
   String lastname;
   Date dob;
   EGender gender;
+  String userEmail;
   String position;
   String objective;
   List<EducationRequestDTO> educationRequestDTO;

@@ -23,7 +23,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-@Entity(name = "work_experience")
+@Entity(name = "project")
 public class Project {
 
   @Id
