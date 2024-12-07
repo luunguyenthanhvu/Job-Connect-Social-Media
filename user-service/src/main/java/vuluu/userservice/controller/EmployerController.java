@@ -8,7 +8,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import vuluu.userservice.dto.request.CreateAccountEmployerRequestDTO;
 import vuluu.userservice.dto.response.ApiResponse;
 import vuluu.userservice.dto.response.MessageResponseDTO;
@@ -25,8 +27,8 @@ public class EmployerController {
 
   @PreAuthorize("hasRole('USER')")
   @PostMapping("/create")
-  public ApiResponse<MessageResponseDTO> createEmployerAccount(@RequestBody
-  CreateAccountEmployerRequestDTO requestDTO) {
+  public ApiResponse<MessageResponseDTO> createEmployerAccount(
+      @RequestBody CreateAccountEmployerRequestDTO requestDTO) {
     return ApiResponse.<MessageResponseDTO>builder()
         .result(employerService.createEmployerAccount(requestDTO)).build();
   }

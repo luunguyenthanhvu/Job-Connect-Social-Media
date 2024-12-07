@@ -1,8 +1,7 @@
 package vuluu.userservice.dto.request;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,10 +14,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationRequestDTO implements Serializable {
+public class ProjectRequestDTO implements Serializable {
 
-  @Email
-  String email;
-  @Size(min = 6, message = "INVALID_PASSWORD")
-  String password;
+  String projectName;
+  String position;
+  Date startDate;
+  Date endDate;
+  String description;
 }

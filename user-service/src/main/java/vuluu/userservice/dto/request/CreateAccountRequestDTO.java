@@ -2,6 +2,7 @@ package vuluu.userservice.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
+import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateAccountRequestDTO {
+public class CreateAccountRequestDTO implements Serializable {
 
   @Size(min = 4, message = "USERNAME_INVALID")
   String username;

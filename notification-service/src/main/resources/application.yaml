@@ -19,8 +19,6 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       auto-offset-reset: earliest
       group-id: notification-group
-      properties:
-        spring.json.value.default.type: vuluu.notificationservice.dto.request.SendEmailRequestDTO
     topics:
       user-register: USER_REGISTER
       suggest-job-user: SUGGEST_JOB

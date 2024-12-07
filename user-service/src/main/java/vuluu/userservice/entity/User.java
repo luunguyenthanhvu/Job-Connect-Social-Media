@@ -60,12 +60,15 @@ public class User implements Serializable {
   @Column(name = "verifyCode")
   String verifyCode;
 
-  @Column(name = "description")
+  @Column(name = "description", columnDefinition = "TEXT")
   String description;
 
   @Column(name = "createdDate")
   @Default
   LocalDateTime createdDate = LocalDateTime.now();
+
+  @Column(name = "website")
+  String website;
 
   @Column(name = "verificationSentDate")
   @Default

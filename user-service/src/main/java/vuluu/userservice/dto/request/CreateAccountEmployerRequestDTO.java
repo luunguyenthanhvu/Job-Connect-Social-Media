@@ -1,6 +1,7 @@
 package vuluu.userservice.dto.request;
 
 import jakarta.annotation.Nonnull;
+import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,8 +14,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateAccountEmployerRequestDTO {
+public class CreateAccountEmployerRequestDTO implements Serializable {
 
+  String img;
   @Nonnull
   String description;
   String[] address;

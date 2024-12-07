@@ -19,9 +19,13 @@ public interface ToApplicantMapper {
   @Mapping(target = "user", ignore = true)
   @Mapping(target = "educations", ignore = true)
   @Mapping(target = "workExperiences", ignore = true)
+  @Mapping(target = "projects", ignore = true)
   @Mapping(target = "firstname", source = "requestDTO.firstname")
   @Mapping(target = "lastname", source = "requestDTO.lastname")
+  @Mapping(target = "userEmail", source = "requestDTO.userEmail")
   @Mapping(target = "dob", source = "requestDTO.dob")
+  @Mapping(target = "position", source = "requestDTO.position")
+  @Mapping(target = "gender", source = "requestDTO.gender")
   @Mapping(target = "objective", source = "requestDTO.objective")
   @Mapping(target = "skills", source = "requestDTO.skills")
   Applicant toApplicant(CreateAccountApplicantRequestDTO requestDTO,

@@ -23,6 +23,7 @@ spring:
       enabled: false
     remote:
       enabled: false
+
   cache:
     type: redis
   data:

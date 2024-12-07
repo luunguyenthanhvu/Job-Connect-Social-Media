@@ -18,6 +18,7 @@ import vuluu.userservice.repository.ApplicantRepository;
 import vuluu.userservice.repository.EmployerRepository;
 import vuluu.userservice.repository.RoleRepository;
 import vuluu.userservice.repository.UserRepository;
+import vuluu.userservice.service.kafka_producer.UploadImageProducer;
 import vuluu.userservice.util.MyUtils;
 
 @Service
@@ -32,9 +33,11 @@ public class EmployerService {
   ApplicantRepository applicantRepository;
   RoleRepository roleRepository;
   MyUtils myUtils;
+  UploadImageProducer uploadImageProducer;
 
   @Transactional
-  public MessageResponseDTO createEmployerAccount(CreateAccountEmployerRequestDTO requestDTO) {
+  public MessageResponseDTO createEmployerAccount(
+      CreateAccountEmployerRequestDTO requestDTO) {
     String userId = myUtils.getUserId();
 
     // If user not present throw error user not exist
@@ -56,12 +59,21 @@ public class EmployerService {
         .ifPresent(roles::add);
     user.setRoles(roles);
     user.setDescription(requestDTO.getDescription());
+    user.setWebsite(requestDTO.getWebsite());
 
     // save updated role
     userRepository.save(user);
 
     // save new employer
     employerRepository.save(employer);
+
+    // using kafka to upload image
+    try {
+      uploadImageProducer.uploadUserProfile(user, requestDTO.getImg());
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new AppException(ErrorCode.UNAUTHENTICATED);
+    }
 
     return MessageResponseDTO.builder().message("Employer create successfully").build();
   }

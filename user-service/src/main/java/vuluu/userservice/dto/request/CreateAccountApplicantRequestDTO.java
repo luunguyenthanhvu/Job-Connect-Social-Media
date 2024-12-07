@@ -1,5 +1,6 @@
 package vuluu.userservice.dto.request;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import lombok.AccessLevel;
@@ -15,15 +16,20 @@ import vuluu.userservice.enums.EGender;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateAccountApplicantRequestDTO {
+public class CreateAccountApplicantRequestDTO implements Serializable {
 
+  String img; // info for image profile
+  String website; // info for website in user
   String firstname;
   String lastname;
   Date dob;
   EGender gender;
+  String userEmail;
+  String position;
   String objective;
   List<EducationRequestDTO> educationRequestDTO;
   List<WorkExperienceRequestDTO> workExperienceRequestDTO;
+  List<ProjectRequestDTO> projectRequestDTO;
   String skills;
   String[] address;
 }

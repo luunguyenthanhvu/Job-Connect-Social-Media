@@ -1,5 +1,6 @@
 package vuluu.userservice.dto.request;
 
+import java.io.Serializable;
 import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EducationRequestDTO {
+public class EducationRequestDTO implements Serializable {
 
   String institutionName;
   String fieldOfStudy;
