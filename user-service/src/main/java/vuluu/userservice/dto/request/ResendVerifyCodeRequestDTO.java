@@ -1,5 +1,6 @@
 package vuluu.userservice.dto.request;
 
+import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResendVerifyCodeRequestDTO {
+public class ResendVerifyCodeRequestDTO implements Serializable {
   String email;
 }

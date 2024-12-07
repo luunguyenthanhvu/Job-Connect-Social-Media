@@ -1,24 +1,21 @@
-package vuluu.userservice.dto.request;
+package vuluu.fileservice.dto.request;
 
-import java.io.Serializable;
-import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import vuluu.fileservice.enums.EImageType;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProjectRequestDTO implements Serializable {
+public class UserProfileUploadRequestDTO {
 
-  String projectName;
-  String position;
-  Date startDate;
-  Date endDate;
-  String description;
+  String file;
+  EImageType type;
+  String userId;
 }

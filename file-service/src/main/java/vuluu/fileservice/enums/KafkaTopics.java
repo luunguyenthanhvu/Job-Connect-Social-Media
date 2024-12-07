@@ -5,7 +5,8 @@ public enum KafkaTopics {
   USER_REGISTER("user-register"),
   SUGGEST_JOB("suggest-job-user"),
   MATCHING_USER("user-matching"),
-  RESET_PASSWORD("reset-password");
+  RESET_PASSWORD("reset-password"),
+  UPLOAD_IMAGE("upload-image");
 
   private final String topicName;
 

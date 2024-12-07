@@ -23,6 +23,7 @@ import vuluu.userservice.mapper.ToApplicantMapper;
 import vuluu.userservice.repository.ApplicantRepository;
 import vuluu.userservice.repository.EmployerRepository;
 import vuluu.userservice.repository.UserRepository;
+import vuluu.userservice.service.kafka_producer.UploadImageProducer;
 import vuluu.userservice.util.MyUtils;
 
 @Service
@@ -36,6 +37,7 @@ public class ApplicantService {
   ApplicantRepository applicantRepository;
   ToApplicantMapper toApplicantMapper;
   MyUtils myUtils;
+  UploadImageProducer uploadImageProducer;
 
   @Transactional
   public MessageResponseDTO createApplicantAccount(CreateAccountApplicantRequestDTO requestDTO) {
@@ -65,8 +67,15 @@ public class ApplicantService {
     applicant.setProjects(toProject(applicant, requestDTO.getProjectRequestDTO()));
 
     // for applicant don't need to update role
+    // update user website
+    user.setWebsite(requestDTO.getWebsite());
+
+    userRepository.save(user);
     // save new applicant
     applicantRepository.save(applicant);
+
+    // using kafka to upload image
+     uploadImageProducer.uploadUserProfile(user, requestDTO.getImg());
 
     return MessageResponseDTO.builder().message("Applicant create successfully").build();
   }

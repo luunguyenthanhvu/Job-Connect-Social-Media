@@ -1,6 +1,7 @@
 package vuluu.userservice.dto.request;
 
 import jakarta.validation.constraints.Email;
+import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AccountVerifyRequestDTO {
+public class AccountVerifyRequestDTO implements Serializable {
 
   @Email
   String email;
