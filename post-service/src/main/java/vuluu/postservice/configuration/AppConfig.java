@@ -1,4 +1,4 @@
-package vuluu.userservice.configuration;
+package vuluu.postservice.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

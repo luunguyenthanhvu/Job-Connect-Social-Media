@@ -21,6 +21,8 @@ import vuluu.userservice.enums.ERole;
 import vuluu.userservice.exception.AppException;
 import vuluu.userservice.exception.ErrorCode;
 import vuluu.userservice.mapper.UserMapper;
+import vuluu.userservice.repository.ApplicantRepository;
+import vuluu.userservice.repository.EmployerRepository;
 import vuluu.userservice.repository.RoleRepository;
 import vuluu.userservice.repository.UserRepository;
 import vuluu.userservice.service.kafka_producer.EmailProducer;
@@ -40,6 +42,8 @@ public class UserService {
   UserMapper userMapper;
   EmailProducer emailProducer;
   ResetPasswordProducer resetPasswordProducer;
+  EmployerRepository employerRepository;
+  ApplicantRepository applicantRepository;
   String VERIFY_SUCCESS = "Your Account is verify.";
   String VERIFY_TIME_OUT = "Verify code out date.";
 
@@ -107,11 +111,16 @@ public class UserService {
       return MessageResponseDTO.builder().message(VERIFY_TIME_OUT).build();
     }
   }
+
   // Phương thức tìm kiếm hình ảnh theo userId hoặc postId
   // Redis Cacheable check cho file dữ liệu
   @Cacheable(value = "userInfoCache", key = "'userInfo:' + #userId", unless = "#result == null")
   public UserResponseDTO getUser() {
     String userId = myUtils.getUserId();
+    // If user type exists throw error user existed
+    if (!employerRepository.existsById(userId) || !applicantRepository.existsById(userId)) {
+      throw new AppException(ErrorCode.USER_NOT_CHOSE_TYPE);
+    }
     return userMapper.toUserResponseDTO(userRepository.findById(userId).get());
   }
 

@@ -1,4 +1,4 @@
-package vuluu.userservice.exception;
+package vuluu.aggregationservice.exception;
 
 public class AppException extends RuntimeException {
 

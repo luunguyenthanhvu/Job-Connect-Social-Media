@@ -39,13 +39,13 @@ public class JobPost implements Serializable {
   @Column(name = "title")
   String title;
 
-  @Column(name = "jobDescription")
+  @Column(name = "jobDescription", columnDefinition = "TEXT")
   String jobDescription;
 
-  @Column(name = "jobExpertise")
+  @Column(name = "jobExpertise", columnDefinition = "TEXT")
   String jobExpertise;
 
-  @Column(name = "jobWelfare")
+  @Column(name = "jobWelfare", columnDefinition = "TEXT")
   String jobWelfare;
 
   /**

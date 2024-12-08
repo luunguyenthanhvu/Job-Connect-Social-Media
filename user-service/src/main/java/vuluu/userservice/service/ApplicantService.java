@@ -1,13 +1,16 @@
 package vuluu.userservice.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 import vuluu.userservice.dto.request.CreateAccountApplicantRequestDTO;
 import vuluu.userservice.dto.request.EducationRequestDTO;
@@ -44,6 +47,7 @@ public class ApplicantService {
   private final String targetUrl = "http://127.0.0.1:8090/extract_user_skill";
 
   @Transactional
+  @CacheEvict(value = "userInfoCache", key = "'userInfo:' + #userId")
   public MessageResponseDTO createApplicantAccount(CreateAccountApplicantRequestDTO requestDTO) {
     String userId = myUtils.getUserId();
 
@@ -75,12 +79,21 @@ public class ApplicantService {
     // update user website
     user.setWebsite(requestDTO.getWebsite());
 
+    // update user info
     userRepository.save(user);
+
     // save new applicant
     applicantRepository.save(applicant);
 
     // using kafka to upload image
-    uploadImageProducer.uploadUserProfile(user, requestDTO.getImg());
+    if (requestDTO.getImg() != null) {
+      try {
+        uploadImageProducer.uploadUserProfile(user, requestDTO.getImg());
+      } catch (Exception e) {
+        e.printStackTrace();
+        throw new AppException(ErrorCode.UNAUTHENTICATED);
+      }
+    }
 
     // post data to extract service to extract skill
     sendPostRequest(
@@ -91,6 +104,9 @@ public class ApplicantService {
   }
 
   private Set<Education> toSetEducation(Applicant applicant, List<EducationRequestDTO> requestDTO) {
+    if (CollectionUtils.isEmpty(requestDTO)) {
+      return Collections.emptySet();
+    }
     return requestDTO.stream()
         .map(educationRequestDTO -> Education
             .builder()
@@ -105,6 +121,9 @@ public class ApplicantService {
 
   private Set<WorkExperience> toWorkExperience(Applicant applicant,
       List<WorkExperienceRequestDTO> requestDTO) {
+    if (CollectionUtils.isEmpty(requestDTO)) {
+      return Collections.emptySet();
+    }
     return requestDTO.stream()
         .map(workExperienceRequestDTO -> WorkExperience
             .builder()
@@ -118,6 +137,9 @@ public class ApplicantService {
   }
 
   private Set<Project> toProject(Applicant applicant, List<ProjectRequestDTO> requestDTO) {
+    if (CollectionUtils.isEmpty(requestDTO)) {
+      return Collections.emptySet();
+    }
     return requestDTO.stream()
         .map(projectRequestDTO -> Project
             .builder()
@@ -132,6 +154,7 @@ public class ApplicantService {
   }
 
   public void sendPostRequest(UserSkillExtractRequestDTO userDTO) {
+    System.out.println("đang gửi request nè");
     // Gửi yêu cầu POST tới service khác và nhận phản hồi
     restTemplate.postForObject(targetUrl, userDTO, UserSkillExtractRequestDTO.class);
   }

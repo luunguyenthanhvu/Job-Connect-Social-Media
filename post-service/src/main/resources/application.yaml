@@ -5,8 +5,7 @@ server:
 
 spring:
   main:
-    web-application-type: reactive
-    allow-bean-definition-overriding: true
+    web-application-type: servlet
   application:
     name: post-service
   datasource:

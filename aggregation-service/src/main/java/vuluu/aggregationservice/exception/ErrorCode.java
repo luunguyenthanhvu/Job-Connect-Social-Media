@@ -1,4 +1,4 @@
-package vuluu.userservice.exception;
+package vuluu.aggregationservice.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,5 @@
 package vuluu.fileservice.service;
 
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,17 +27,34 @@ public class ImageService {
   // Phương thức tìm kiếm hình ảnh theo userId hoặc postId
   // Redis Cacheable check cho file dữ liệu
   @Cacheable(value = "fileInfoCache", key = "'file:' + #userId", unless = "#result == null")
-  public List<Image> searchImages(String postId) {
+  public String searchImages(String postId) {
     String userId = myUtils.getUserId();
-    if (postId != null || !postId.isEmpty()) {
-      return imageRepository.findByUserIdAndPostId(userId, postId);
+    log.error("tìm ảnh");
+
+    // Kiểm tra nếu postId không null và không rỗng
+    if (postId != null && !postId.isEmpty()) {
+      log.error("tìm với bài post");
+      // Xử lý tìm ảnh theo postId
+      return ""; // Giả sử bạn chưa xử lý phần này
     } else {
-      return imageRepository.findByUserId(userId);
+      log.error("tìm với userID");
+      log.error(imageRepository.findByUserId(userId) + " ");
+      Image imageList = imageRepository.findFirstByUserIdOrderByIdDesc(userId);
+
+      // Kiểm tra danh sách ảnh có phần tử hay không
+      if (imageList != null) {
+        // Trả về URL ảnh đầu tiên từ danh sách
+        return imageList.getImageUrl();
+      }
+      return ""; // Trả về chuỗi rỗng nếu không có ảnh
     }
   }
 
+
   @Transactional
-  public void uploadImageWithBase64(UserProfileUploadRequestDTO requestDTO) {
+  @Cacheable(value = "fileInfoCache", key = "'file:' + #userId", unless = "#result == null")
+  public void uploadImageWithByte(UserProfileUploadRequestDTO requestDTO) {
+    String userId = requestDTO.getUserId();
     try {
       String imgUrl = cloudinaryService.uploadImage(requestDTO.getFile());
       var image = Image

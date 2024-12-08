@@ -20,7 +20,9 @@ public enum ErrorCode {
   VERIFY_TIME_OUT(1011, "Verify code out date. Please verify again.", HttpStatus.BAD_REQUEST),
   WRONG_VERIFY_CODE(1012, "Verify code wrong. Please enter again.", HttpStatus.BAD_REQUEST),
   JOB_NOT_EXISTED(1013, "Job not found!", HttpStatus.BAD_REQUEST),
-  USER_VERIFIED(1014, "User has already been verified!", HttpStatus.BAD_REQUEST);
+  USER_VERIFIED(1014, "User has already been verified!", HttpStatus.BAD_REQUEST),
+  USER_NOT_CHOSE_TYPE(1015, "Please set up your account", HttpStatus.BAD_REQUEST),
+  WRONG_PASSWORD(1016, "WRONG PASSWORD", HttpStatus.BAD_REQUEST);
 
 
   ErrorCode(int code, String message, HttpStatusCode statusCode) {

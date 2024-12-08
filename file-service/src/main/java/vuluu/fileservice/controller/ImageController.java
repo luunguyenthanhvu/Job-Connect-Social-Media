@@ -70,6 +70,6 @@ public class ImageController {
   public ApiResponse<String> searchImages(
       @RequestParam("postId") String postId) {
     return ApiResponse.<String>builder()
-        .result(imageService.searchImages(postId).get(0).getImageUrl()).build();
+        .result(imageService.searchImages(postId)).build();
   }
 }

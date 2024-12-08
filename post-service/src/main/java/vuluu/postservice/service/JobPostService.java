@@ -7,12 +7,13 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Mono;
+import org.springframework.web.client.RestTemplate;
 import vuluu.postservice.dto.request.JobApplyRequestDTO;
 import vuluu.postservice.dto.request.JobPostRequestDTO;
 import vuluu.postservice.dto.request.JobSkillExtractRequestDTO;
 import vuluu.postservice.dto.response.JobPostDetailResponseDTO;
 import vuluu.postservice.dto.response.JobPostResponseDTO;
+import vuluu.postservice.dto.response.JobSkillExtractResponseDTO;
 import vuluu.postservice.dto.response.MessageResponseDTO;
 import vuluu.postservice.entity.Application;
 import vuluu.postservice.entity.JobPost;
@@ -20,7 +21,6 @@ import vuluu.postservice.exception.AppException;
 import vuluu.postservice.exception.ErrorCode;
 import vuluu.postservice.mapper.JobPostMapper;
 import vuluu.postservice.repository.ApplicationRepository;
-import vuluu.postservice.repository.JobExtractClient;
 import vuluu.postservice.repository.JobPostRepository;
 import vuluu.postservice.util.MyUtils;
 
@@ -34,7 +34,8 @@ public class JobPostService {
   JobPostRepository jobPostRepository;
   MyUtils myUtils;
   ApplicationRepository applicationRepository;
-  JobExtractClient jobExtractClient;
+  RestTemplate restTemplate;
+  private final String targetUrl = "http://127.0.0.1:8090/extract_description";
 
   @Transactional
   public JobPostResponseDTO postJob(JobPostRequestDTO requestDTO) {
@@ -47,18 +48,11 @@ public class JobPostService {
     jobPost = jobPostRepository.save(jobPost);
 
     // post job data to extract service
-    jobExtractClient.extractJobDescription(JobSkillExtractRequestDTO
-            .builder()
-            .jobId(jobPost.getId())
-            .skill(jobPost.getJobExpertise())
-            .build())
-        .flatMap(response -> {
-          // Thực hiện các thao tác với response
-          System.out.println("Kết quả nhận được từ service: " + response);
-          // Có thể trả về Mono khác hoặc xử lý tiếp
-          return Mono.just(response);
-        })
-        .subscribe();
+    sendPostRequest(JobSkillExtractRequestDTO.builder()
+        .jobId(jobPost.getId())
+        .jobDescription(jobPost.getJobExpertise())
+        .build());
+
     return jobPostMapper.toJobPostResponseDTO(jobPost);
   }
 
@@ -112,4 +106,15 @@ public class JobPostService {
     }
   }
 
+  public void sendPostRequest(JobSkillExtractRequestDTO jobDTO) {
+    JobSkillExtractResponseDTO response = restTemplate.postForObject(targetUrl, jobDTO,
+        JobSkillExtractResponseDTO.class);
+
+    // In ra phản hồi nhận được
+    if (response != null) {
+      System.out.println("Phản hồi nhận được: " + response);
+    } else {
+      System.out.println("Không có phản hồi từ server");
+    }
+  }
 }

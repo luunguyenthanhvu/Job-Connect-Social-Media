@@ -11,4 +11,6 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
   List<Image> findByUserId(String userId);
 
   List<Image> findByUserIdAndPostId(String userId, String postId);
+
+  Image findFirstByUserIdOrderByIdDesc(String userId);
 }

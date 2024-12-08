@@ -1,4 +1,4 @@
-package vuluu.userservice.exception;
+package vuluu.aggregationservice.exception;
 
 import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
@@ -8,7 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import vuluu.userservice.dto.response.ApiResponse;
+import vuluu.aggregationservice.dto.response.ApiResponse;
+
 
 @ControllerAdvice
 @Slf4j

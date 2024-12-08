@@ -1,5 +1,6 @@
 package vuluu.userservice.service.kafka_producer;
 
+import java.io.IOException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -10,6 +11,7 @@ import vuluu.userservice.dto.request.UserProfileUploadRequestDTO;
 import vuluu.userservice.entity.User;
 import vuluu.userservice.enums.EImageType;
 import vuluu.userservice.enums.KafkaTopics;
+import vuluu.userservice.util.MyUtils;
 
 @Service
 @Slf4j
@@ -18,11 +20,12 @@ import vuluu.userservice.enums.KafkaTopics;
 public class UploadImageProducer {
 
   KafkaTemplate<String, Object> kafkaTemplate;
+  MyUtils myUtils;
 
-  public void uploadUserProfile(User user, byte[] img) {
+  public void uploadUserProfile(User user, byte[] img) throws IOException {
     UserProfileUploadRequestDTO data = UserProfileUploadRequestDTO
         .builder()
-        .file(img)
+        .file(myUtils.compress(img))
         .type(EImageType.USER_PROFILE)
         .userId(user.getId())
         .build();

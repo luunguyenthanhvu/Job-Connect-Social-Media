@@ -1,6 +1,5 @@
 package vuluu.fileservice.service.kafka;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +11,7 @@ import vuluu.fileservice.dto.request.UserProfileUploadRequestDTO;
 import vuluu.fileservice.exception.AppException;
 import vuluu.fileservice.exception.ErrorCode;
 import vuluu.fileservice.service.ImageService;
+import vuluu.fileservice.util.MyUtils;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -21,16 +21,19 @@ public class UploadImageConsumerService {
 
   ImageService imageService;
   ObjectMapper objectMapper;
+  MyUtils myUtils;
 
   @KafkaListener(topics = "${spring.kafka.topics.upload-image}", groupId = "${spring.kafka.consumer.group-id}")
   public void listenUploadUserProfile(String jsonMessage) {
     UserProfileUploadRequestDTO requestDTO = null;
     try {
       requestDTO = objectMapper.readValue(jsonMessage, UserProfileUploadRequestDTO.class);
-    } catch (JsonProcessingException e) {
+      requestDTO.setFile(myUtils.decompress(requestDTO.getFile()));
+    } catch (Exception e) {
+      e.printStackTrace();
       throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
     }
     log.info(String.valueOf(requestDTO));
-    imageService.uploadImageWithBase64(requestDTO);
+    imageService.uploadImageWithByte(requestDTO);
   }
 }

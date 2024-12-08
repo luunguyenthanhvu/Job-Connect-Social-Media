@@ -42,6 +42,7 @@ public class AuthenticationService {
 
   public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO requestDTO) {
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+    log.info("User find email");
     var user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(() -> new AppException(
         ErrorCode.USER_NOT_EXISTED));
 
@@ -49,13 +50,14 @@ public class AuthenticationService {
     if (!user.isVerified()) {
       throw new AppException(ErrorCode.NOT_YET_AUTHENTICATED);
     }
-
+    log.info("User email verify");
     boolean authenticated = passwordEncoder.matches(requestDTO.getPassword(), user.getPassword());
 
     // check map password
     if (!authenticated) {
       throw new AppException(ErrorCode.UNAUTHENTICATED);
     }
+    log.info("User pass ok");
 
     log.info(user + "");
     var token = generateToken(user);
