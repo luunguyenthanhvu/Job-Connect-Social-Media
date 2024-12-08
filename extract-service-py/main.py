@@ -19,10 +19,11 @@ def upload_cv():
     matching_jobs = find_matching_jobs(user_id)
 
     # Trả về danh sách các ứng viên phù hợp
-    return jsonify({
-        "userId": user_id,
-        "matchingJobs": matching_jobs
-    })
+    # return jsonify({
+    #     "userId": user_id,
+    #     "matchingJobs": matching_jobs
+    # })
+    return '', 200
 
 @app.route('/extract_description', methods=['POST'])
 def handle_job():
@@ -42,4 +43,4 @@ def handle_job():
     })
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8084)
+    app.run(host='0.0.0.0', port=8090)

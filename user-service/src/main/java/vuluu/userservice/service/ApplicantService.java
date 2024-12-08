@@ -8,9 +8,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import vuluu.userservice.dto.request.CreateAccountApplicantRequestDTO;
 import vuluu.userservice.dto.request.EducationRequestDTO;
 import vuluu.userservice.dto.request.ProjectRequestDTO;
+import vuluu.userservice.dto.request.UserSkillExtractRequestDTO;
 import vuluu.userservice.dto.request.WorkExperienceRequestDTO;
 import vuluu.userservice.dto.response.MessageResponseDTO;
 import vuluu.userservice.entity.Applicant;
@@ -38,6 +40,8 @@ public class ApplicantService {
   ToApplicantMapper toApplicantMapper;
   MyUtils myUtils;
   UploadImageProducer uploadImageProducer;
+  RestTemplate restTemplate;
+  private final String targetUrl = "http://127.0.0.1:8090/extract_user_skill";
 
   @Transactional
   public MessageResponseDTO createApplicantAccount(CreateAccountApplicantRequestDTO requestDTO) {
@@ -62,6 +66,7 @@ public class ApplicantService {
     // setting work experience for applicant
     applicant.setWorkExperiences(toWorkExperience(applicant,
         requestDTO.getWorkExperienceRequestDTO()));
+    applicant.setUserEmail(requestDTO.getUserEmail());
 
     // setting projects for applicant
     applicant.setProjects(toProject(applicant, requestDTO.getProjectRequestDTO()));
@@ -75,7 +80,12 @@ public class ApplicantService {
     applicantRepository.save(applicant);
 
     // using kafka to upload image
-     uploadImageProducer.uploadUserProfile(user, requestDTO.getImg());
+    uploadImageProducer.uploadUserProfile(user, requestDTO.getImg());
+
+    // post data to extract service to extract skill
+    sendPostRequest(
+        UserSkillExtractRequestDTO.builder().userId(userId).cvSkill(requestDTO.getSkills())
+            .build());
 
     return MessageResponseDTO.builder().message("Applicant create successfully").build();
   }
@@ -119,5 +129,10 @@ public class ApplicantService {
             .applicant(applicant)
             .build())
         .collect(Collectors.toSet());
+  }
+
+  public void sendPostRequest(UserSkillExtractRequestDTO userDTO) {
+    // Gửi yêu cầu POST tới service khác và nhận phản hồi
+    restTemplate.postForObject(targetUrl, userDTO, UserSkillExtractRequestDTO.class);
   }
 }

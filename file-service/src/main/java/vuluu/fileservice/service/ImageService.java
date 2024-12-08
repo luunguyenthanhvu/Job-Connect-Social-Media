@@ -7,8 +7,11 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vuluu.fileservice.dto.request.UserProfileUploadRequestDTO;
 import vuluu.fileservice.entity.Image;
+import vuluu.fileservice.exception.AppException;
+import vuluu.fileservice.exception.ErrorCode;
 import vuluu.fileservice.repository.ImageRepository;
 import vuluu.fileservice.util.MyUtils;
 
@@ -34,14 +37,19 @@ public class ImageService {
     }
   }
 
+  @Transactional
   public void uploadImageWithBase64(UserProfileUploadRequestDTO requestDTO) {
-    String imgUrl = cloudinaryService.uploadBase64Image(requestDTO.getFile());
-    var image = Image
-        .builder()
-        .imageUrl(imgUrl)
-        .userId(requestDTO.getUserId())
-        .type(requestDTO.getType())
-        .build();
-    imageRepository.save(image);
+    try {
+      String imgUrl = cloudinaryService.uploadImage(requestDTO.getFile());
+      var image = Image
+          .builder()
+          .imageUrl(imgUrl)
+          .userId(requestDTO.getUserId())
+          .type(requestDTO.getType())
+          .build();
+      imageRepository.save(image);
+    } catch (Exception e) {
+      throw new AppException(ErrorCode.UNAUTHENTICATED);
+    }
   }
 }

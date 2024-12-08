@@ -59,15 +59,16 @@ public class CloudinaryService {
     return imageUrl;
   }
 
-  public String uploadBase64Image(String base64Image) {
-    try {
-      // Upload ảnh lên Cloudinary
-      Map<String, Object> uploadResult = cloudinary.uploader()
-          .upload(base64Image, ObjectUtils.asMap("resource_type", "auto"));
-      // Trả về URL của hình ảnh đã upload
-      return uploadResult.get("url").toString();
-    } catch (IOException e) {
-      throw new RuntimeException("Error uploading image to Cloudinary", e);
-    }
+  // Upload image using byte array
+  public String uploadImage(byte[] imageBytes) throws IOException {
+    // Upload the image to Cloudinary
+    Map<String, Object> uploadResult = cloudinary.uploader()
+        .upload(imageBytes, ObjectUtils.emptyMap());
+
+    // Get the image URL from the upload result
+    String imageUrl = uploadResult.get("url").toString();
+
+    // Return the URL as response
+    return imageUrl;
   }
 }

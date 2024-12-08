@@ -19,7 +19,7 @@ public class UploadImageProducer {
 
   KafkaTemplate<String, Object> kafkaTemplate;
 
-  public void uploadUserProfile(User user, String img) {
+  public void uploadUserProfile(User user, byte[] img) {
     UserProfileUploadRequestDTO data = UserProfileUploadRequestDTO
         .builder()
         .file(img)
