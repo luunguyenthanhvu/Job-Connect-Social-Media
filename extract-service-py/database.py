@@ -34,8 +34,9 @@ def create_tables():
 
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS Jobs (
-                job_id BIGINT PRIMARY KEY,
-                required_skills TEXT
+                job_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                required_skills TEXT,
+                post_id VARCHAR(50)
             )
         ''')
 
@@ -74,8 +75,8 @@ def save_user(user_id, skills):
         cursor.close()
         conn.close()
 
-def save_job(job_id, required_skills):
-    """Save a job into the Jobs table."""
+def save_job(required_skills, post_id):
+    """Save a job into the Jobs table, updating if post_id already exists."""
     conn = connect_db()
     if conn is None:
         print("Connection failed.")
@@ -83,9 +84,22 @@ def save_job(job_id, required_skills):
 
     try:
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO Jobs (job_id, required_skills) VALUES (%s, %s)',
-                       (job_id, required_skills))
+
+        # Check if the post_id already exists in the Jobs table
+        cursor.execute('SELECT job_id FROM Jobs WHERE post_id = %s', (post_id,))
+        existing_job = cursor.fetchone()
+
+        if existing_job:
+            # If a job with the post_id exists, delete the old record
+            cursor.execute('DELETE FROM Jobs WHERE post_id = %s', (post_id,))
+            print(f"Deleted existing job with post_id: {post_id}")
+
+        # Insert the new job record
+        cursor.execute('INSERT INTO Jobs (required_skills, post_id) VALUES (%s, %s)',
+                       (required_skills, post_id))
         conn.commit()
+        print(f"Inserted new job with post_id: {post_id}")
+
     except Error as e:
         print(f"Error saving job: {e}")
     finally:

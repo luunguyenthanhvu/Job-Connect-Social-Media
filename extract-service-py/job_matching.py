@@ -9,8 +9,13 @@ def find_matching_jobs(user_id):
     cursor.execute('SELECT skills FROM Users WHERE user_id = %s', (user_id,))
     user_skills = cursor.fetchone()[0]
 
-    cursor.execute('SELECT job_id, required_skills FROM Jobs')
+    cursor.execute('SELECT job_id, required_skills,post_id FROM Jobs')
     jobs = cursor.fetchall()
+
+    if not jobs:
+        conn.commit()
+        conn.close()
+        return None
 
     tfidf = TfidfVectorizer()
     job_data = [user_skills] + [job[1] for job in jobs]
@@ -34,12 +39,17 @@ def find_matching_user(job_id):
     conn = connect_db()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT required_skills FROM Jobs WHERE job_id = %s', (job_id,))
+    cursor.execute('SELECT required_skills FROM Jobs WHERE post_id = %s', (job_id,))
     required_skills =  cursor.fetchone()[0]
 
     # Lấy danh sách tất cả ứng viên và kỹ năng của họ
     cursor.execute('SELECT user_id, skills FROM Users')
     users = cursor.fetchall()
+
+    if not users:
+        conn.commit()
+        conn.close()
+        return None
 
     # Tính toán độ tương đồng dựa trên kỹ năng của công việc và ứng viên
     tfidf = TfidfVectorizer()
