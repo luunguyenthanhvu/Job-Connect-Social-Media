@@ -16,13 +16,6 @@ def upload_cv():
     #
     # Gọi hàm để trích xuất và lưu kỹ năng
     extract_and_save_skills_user(user_id, cv_text)
-    matching_jobs = find_matching_jobs(user_id)
-
-    # Trả về danh sách các ứng viên phù hợp
-    # return jsonify({
-    #     "userId": user_id,
-    #     "matchingJobs": matching_jobs
-    # })
     return '', 200
 
 @app.route('/extract_description', methods=['POST'])
