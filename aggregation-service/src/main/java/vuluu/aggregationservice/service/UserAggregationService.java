@@ -35,37 +35,28 @@ public class UserAggregationService {
   }
 
   public Mono<ApiResponse<UserResponseDTO>> getUserInfo(String postId) {
+    // Gọi API từ userWebClient để lấy thông tin người dùng
     Mono<ApiResponse<UserResponseDTO>> userMono = WebClientBuilder.createClient(uWebClient,
             UserClient.class)
-        .getUserInfo()
-        .doOnError(e -> log.error("Error occurred in user service: ", e));
+        .getUserInfo();
 
+    // Gọi API từ fileWebClient để lấy ảnh đại diện dựa trên userId
     Mono<ApiResponse<String>> userImage = WebClientBuilder.createClient(fWebClient,
-            FileClient.class)
-        .getFileData("")
-        .doOnError(e -> log.error("Error occurred in file service: ", e));
+        FileClient.class).getFileData("");
 
+    // Kết hợp dữ liệu từ cả hai nguồn
     return Mono.zip(userMono, userImage)
-        .flatMap(tuple -> {
+        .map(tuple -> {
           UserResponseDTO user = tuple.getT1().getResult();
           String imageUrl = tuple.getT2().getResult();
 
           user.setImg(imageUrl);
 
-          return Mono.just(
-              new ApiResponse<>(200, "User info with image retrieved successfully", user));
+          return new ApiResponse<>(200, "User info with image retrieved successfully", user);
         })
         .onErrorResume(e -> {
-          if (e instanceof AppException) {
-            log.error("AppException occurred: ", e);
-            return Mono.just(new ApiResponse<>(500, e.getMessage(), null));
-          } else {
-            log.error("General error occurred: ", e);
-            return Mono.just(
-                new ApiResponse<>(ErrorCode.USER_NOT_CHOSE_TYPE.getCode(),
-                    ErrorCode.USER_NOT_CHOSE_TYPE.getMessage(),
-                    null));
-          }
+          log.error("Error fetching user info with image: ", e);
+          return Mono.error(new AppException(ErrorCode.USER_NOT_CHOSE_TYPE));
         });
   }
 }

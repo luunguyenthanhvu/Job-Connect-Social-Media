@@ -117,11 +117,12 @@ public class UserService {
   @Cacheable(value = "userInfoCache", key = "'userInfo:' + #userId", unless = "#result == null")
   public UserResponseDTO getUser() {
     String userId = myUtils.getUserId();
+    System.out.println("Kiểm tra user");
     // If user type exists throw error user existed
-    if (!employerRepository.existsById(userId) || !applicantRepository.existsById(userId)) {
-      throw new AppException(ErrorCode.USER_NOT_CHOSE_TYPE);
+    if (employerRepository.existsById(userId) || applicantRepository.existsById(userId)) {
+      return userMapper.toUserResponseDTO(userRepository.findById(userId).get());
     }
-    return userMapper.toUserResponseDTO(userRepository.findById(userId).get());
+    throw new AppException(ErrorCode.USER_NOT_CHOSE_TYPE);
   }
 
   @Transactional
