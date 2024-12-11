@@ -1,6 +1,9 @@
 package vuluu.userservice.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.zip.GZIPOutputStream;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -48,4 +51,13 @@ public class MyUtils {
     }
     return code.toString();
   }
+
+  public byte[] compress(byte[] data) throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream)) {
+      gzipOutputStream.write(data);
+    }
+    return byteArrayOutputStream.toByteArray();
+  }
+
 }

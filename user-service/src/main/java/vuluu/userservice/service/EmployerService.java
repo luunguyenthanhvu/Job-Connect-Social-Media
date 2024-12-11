@@ -5,6 +5,7 @@ import java.util.Set;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vuluu.userservice.dto.request.CreateAccountEmployerRequestDTO;
@@ -36,6 +37,7 @@ public class EmployerService {
   UploadImageProducer uploadImageProducer;
 
   @Transactional
+  @CacheEvict(value = "userInfoCache", key = "'userInfo:' + #userId")
   public MessageResponseDTO createEmployerAccount(
       CreateAccountEmployerRequestDTO requestDTO) {
     String userId = myUtils.getUserId();
@@ -68,11 +70,13 @@ public class EmployerService {
     employerRepository.save(employer);
 
     // using kafka to upload image
-    try {
-      uploadImageProducer.uploadUserProfile(user, requestDTO.getImg());
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new AppException(ErrorCode.UNAUTHENTICATED);
+    if (requestDTO.getImg() != null) {
+      try {
+        uploadImageProducer.uploadUserProfile(user, requestDTO.getImg());
+      } catch (Exception e) {
+        e.printStackTrace();
+        throw new AppException(ErrorCode.UNAUTHENTICATED);
+      }
     }
 
     return MessageResponseDTO.builder().message("Employer create successfully").build();

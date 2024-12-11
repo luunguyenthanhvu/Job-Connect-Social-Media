@@ -15,7 +15,7 @@ import vuluu.fileservice.enums.EImageType;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserProfileUploadRequestDTO {
 
-  String file;
+  byte[] file;
   EImageType type;
   String userId;
 }

@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import vuluu.aggregationservice.configuration.WebClientBuilder;
+import vuluu.aggregationservice.dto.pageCustom.PageCustomResponseDTO;
 import vuluu.aggregationservice.dto.response.ApiResponse;
-import vuluu.aggregationservice.dto.response.UserBasicInfoResponseDTO;
+import vuluu.aggregationservice.dto.response.JobPostListResponseDTO;
 import vuluu.aggregationservice.dto.response.UserResponseDTO;
+import vuluu.aggregationservice.exception.AppException;
+import vuluu.aggregationservice.exception.ErrorCode;
 import vuluu.aggregationservice.repository.FileClient;
 import vuluu.aggregationservice.repository.UserClient;
 
@@ -55,7 +58,8 @@ public class UserAggregationService {
         })
         .onErrorResume(e -> {
           log.error("Error fetching user info with image: ", e);
-          return Mono.just(new ApiResponse<>(500, "Failed to retrieve user info with image", null));
+          return Mono.error(new AppException(ErrorCode.USER_NOT_CHOSE_TYPE));
         });
   }
+
 }

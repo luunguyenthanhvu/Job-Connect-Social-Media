@@ -15,5 +15,5 @@ import lombok.experimental.FieldDefaults;
 public class JobSkillExtractRequestDTO {
 
   Long jobId;
-  String skill;
+  String jobDescription;
 }

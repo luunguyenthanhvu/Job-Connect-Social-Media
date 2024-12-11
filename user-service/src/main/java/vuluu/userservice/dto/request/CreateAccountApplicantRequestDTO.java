@@ -18,7 +18,8 @@ import vuluu.userservice.enums.EGender;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateAccountApplicantRequestDTO implements Serializable {
 
-  String img; // info for image profile
+
+  byte[] img;// info for image profile
   String website; // info for website in user
   String firstname;
   String lastname;

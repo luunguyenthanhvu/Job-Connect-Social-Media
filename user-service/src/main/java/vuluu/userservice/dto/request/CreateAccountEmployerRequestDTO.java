@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateAccountEmployerRequestDTO implements Serializable {
 
-  String img;
+  byte[] img;
   @Nonnull
   String description;
   String[] address;

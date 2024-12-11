@@ -1,17 +1,21 @@
 package vuluu.fileservice.controller;
 
 import java.io.IOException;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import vuluu.fileservice.dto.request.ListUserGetImgRequestDTO;
 import vuluu.fileservice.dto.response.ApiResponse;
 import vuluu.fileservice.dto.response.ImageResponseDTO;
+import vuluu.fileservice.dto.response.ListUserWithImgResponseDTO;
 import vuluu.fileservice.enums.EImageType;
 import vuluu.fileservice.service.CloudinaryService;
 import vuluu.fileservice.service.ImageService;
@@ -70,6 +74,13 @@ public class ImageController {
   public ApiResponse<String> searchImages(
       @RequestParam("postId") String postId) {
     return ApiResponse.<String>builder()
-        .result(imageService.searchImages(postId).get(0).getImageUrl()).build();
+        .result(imageService.searchImages(postId)).build();
+  }
+
+  @PostMapping("/get-user-image")
+  public ApiResponse<List<ListUserWithImgResponseDTO>> getUserImage(
+      @RequestBody List<ListUserGetImgRequestDTO> requestDTO) {
+    return ApiResponse.<List<ListUserWithImgResponseDTO>>builder()
+        .result(imageService.searchUserImages(requestDTO)).build();
   }
 }

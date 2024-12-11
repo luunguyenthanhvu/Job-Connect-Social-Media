@@ -16,7 +16,7 @@ import vuluu.userservice.enums.EImageType;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserProfileUploadRequestDTO implements Serializable {
 
-  String file;
+  byte[] file;
   EImageType type;
   String userId;
 }

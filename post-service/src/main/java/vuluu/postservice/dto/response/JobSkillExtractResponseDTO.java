@@ -16,5 +16,5 @@ import lombok.experimental.FieldDefaults;
 public class JobSkillExtractResponseDTO implements Serializable {
 
   String jobId;
-  String[] userId;
+  String[] matchingUsers;
 }

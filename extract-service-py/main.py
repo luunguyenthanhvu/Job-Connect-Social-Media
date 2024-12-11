@@ -14,15 +14,9 @@ def upload_cv():
     user_id = data.get("userId")
     cv_text = data.get("cvSkill")
     #
-    # Gọi hàm để trích xuất và lưu kỹ năng
     extract_and_save_skills_user(user_id, cv_text)
-    matching_jobs = find_matching_jobs(user_id)
-
-    # Trả về danh sách các ứng viên phù hợp
-    return jsonify({
-        "userId": user_id,
-        "matchingJobs": matching_jobs
-    })
+    # Gọi hàm để trích xuất và lưu kỹ năng
+    return '', 200
 
 @app.route('/extract_description', methods=['POST'])
 def handle_job():
@@ -34,6 +28,12 @@ def handle_job():
     # # Gọi hàm để trích xuất và lưu kỹ năng
     extract_and_save_skills_job(job_id, job_description)
     matching_users = find_matching_user(job_id)
+    print(matching_users)
+    if not matching_users:
+        return jsonify({
+            "jobId": job_id,
+            "matchingUsers": []
+        })
 
     # Trả về danh sách các ứng viên phù hợp
     return jsonify({
@@ -42,4 +42,4 @@ def handle_job():
     })
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8084)
+    app.run(host='0.0.0.0', port=8090)

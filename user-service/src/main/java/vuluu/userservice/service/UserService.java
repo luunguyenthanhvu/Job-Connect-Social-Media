@@ -2,7 +2,9 @@ package vuluu.userservice.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vuluu.userservice.dto.request.AccountVerifyRequestDTO;
 import vuluu.userservice.dto.request.CreateAccountRequestDTO;
+import vuluu.userservice.dto.request.EmployerInfoWithAddressRequestDTO;
+import vuluu.userservice.dto.response.JobPostEmployerInfoAddressResponseDTO;
 import vuluu.userservice.dto.response.MessageResponseDTO;
 import vuluu.userservice.dto.response.UserResponseDTO;
 import vuluu.userservice.entity.Role;
@@ -21,6 +25,9 @@ import vuluu.userservice.enums.ERole;
 import vuluu.userservice.exception.AppException;
 import vuluu.userservice.exception.ErrorCode;
 import vuluu.userservice.mapper.UserMapper;
+import vuluu.userservice.repository.AddressRepository;
+import vuluu.userservice.repository.ApplicantRepository;
+import vuluu.userservice.repository.EmployerRepository;
 import vuluu.userservice.repository.RoleRepository;
 import vuluu.userservice.repository.UserRepository;
 import vuluu.userservice.service.kafka_producer.EmailProducer;
@@ -38,8 +45,11 @@ public class UserService {
   RoleRepository roleRepository;
   PasswordEncoder passwordEncoder;
   UserMapper userMapper;
+  AddressRepository addressRepository;
   EmailProducer emailProducer;
   ResetPasswordProducer resetPasswordProducer;
+  EmployerRepository employerRepository;
+  ApplicantRepository applicantRepository;
   String VERIFY_SUCCESS = "Your Account is verify.";
   String VERIFY_TIME_OUT = "Verify code out date.";
 
@@ -107,12 +117,18 @@ public class UserService {
       return MessageResponseDTO.builder().message(VERIFY_TIME_OUT).build();
     }
   }
+
   // Phương thức tìm kiếm hình ảnh theo userId hoặc postId
   // Redis Cacheable check cho file dữ liệu
   @Cacheable(value = "userInfoCache", key = "'userInfo:' + #userId", unless = "#result == null")
   public UserResponseDTO getUser() {
     String userId = myUtils.getUserId();
-    return userMapper.toUserResponseDTO(userRepository.findById(userId).get());
+    System.out.println("Kiểm tra user");
+    // If user type exists throw error user existed
+    if (employerRepository.existsById(userId) || applicantRepository.existsById(userId)) {
+      return userMapper.toUserResponseDTO(userRepository.findById(userId).get());
+    }
+    throw new AppException(ErrorCode.USER_NOT_CHOSE_TYPE);
   }
 
   @Transactional
@@ -156,4 +172,41 @@ public class UserService {
     return MessageResponseDTO.builder().message("Reset password successfully").build();
   }
 
+  // method get employer info with userId and addressId
+  public List<JobPostEmployerInfoAddressResponseDTO> getEmployerWithAddress(
+      List<EmployerInfoWithAddressRequestDTO> requestDTO) {
+    var response = new ArrayList<JobPostEmployerInfoAddressResponseDTO>();
+    requestDTO.forEach(dto -> {
+      var employerInfoWithAddress = getListEmployerInfoWithAddress(dto.getUserId(),
+          dto.getAddressId());
+      employerInfoWithAddress.setPostId(dto.getPostId());
+      response.add(employerInfoWithAddress);
+    });
+    return response;
+  }
+
+  @Cacheable(value = "employerInfoWithAddressCache",
+      key = "'employerInfoWithAddress:' + #userId + #addressId", unless = "#result == null")
+  public JobPostEmployerInfoAddressResponseDTO getListEmployerInfoWithAddress(
+      String userId, Long addressId) {
+
+    // Ensure userId and addressId are found
+    var usernameOptional = userRepository.findUsernameById(userId);
+    var addressOptional = addressRepository.findById(addressId);
+
+    if (usernameOptional.isPresent() && addressOptional.isPresent()) {
+      var username = usernameOptional.get();
+      var address = addressOptional.get().getAddressDescription();
+
+      return JobPostEmployerInfoAddressResponseDTO.builder()
+          .userId(userId)
+          .address(address)
+          .username(username) // Ensure username is set
+          .build();
+    } else {
+      // Handle case where user or address is not found
+      log.error("User info no address id or user not exits");
+      throw new AppException(ErrorCode.UNAUTHENTICATED);
+    }
+  }
 }

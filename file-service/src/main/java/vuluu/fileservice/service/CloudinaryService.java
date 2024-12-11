@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import vuluu.fileservice.entity.Image;
@@ -33,6 +34,7 @@ public class CloudinaryService {
         "api_secret", apiSecret));
   }
 
+  @CacheEvict(value = "jobPosts", key = "#userId")
   public String uploadImage(MultipartFile file, String postId,
       EImageType type) throws IOException {
     // Upload the image to Cloudinary
@@ -59,15 +61,16 @@ public class CloudinaryService {
     return imageUrl;
   }
 
-  public String uploadBase64Image(String base64Image) {
-    try {
-      // Upload ảnh lên Cloudinary
-      Map<String, Object> uploadResult = cloudinary.uploader()
-          .upload(base64Image, ObjectUtils.asMap("resource_type", "auto"));
-      // Trả về URL của hình ảnh đã upload
-      return uploadResult.get("url").toString();
-    } catch (IOException e) {
-      throw new RuntimeException("Error uploading image to Cloudinary", e);
-    }
+  // Upload image using byte array
+  public String uploadImage(byte[] imageBytes) throws IOException {
+    // Upload the image to Cloudinary
+    Map<String, Object> uploadResult = cloudinary.uploader()
+        .upload(imageBytes, ObjectUtils.emptyMap());
+
+    // Get the image URL from the upload result
+    String imageUrl = uploadResult.get("url").toString();
+
+    // Return the URL as response
+    return imageUrl;
   }
 }
