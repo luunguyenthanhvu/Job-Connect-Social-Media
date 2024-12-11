@@ -8,16 +8,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import vuluu.aggregationservice.dto.response.JobPostListResponseDTO;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PaginatedJobPostListResponseDTO implements Serializable {
+public class PageCustomResponseDTO<T> implements Serializable {
 
-  List<JobPostListResponseDTO> content;
+  List<T> content;
   PageableDTO pageable;
   boolean last;
   int totalPages;
