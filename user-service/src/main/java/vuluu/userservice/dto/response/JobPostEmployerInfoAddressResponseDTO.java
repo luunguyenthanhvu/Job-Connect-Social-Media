@@ -13,9 +13,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JobPostUserInfoAddressResponseDTO implements Serializable {
+public class JobPostEmployerInfoAddressResponseDTO implements Serializable {
 
+  String postId;
   String userId;
-
-
+  String username;
+  String address;
 }

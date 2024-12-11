@@ -1,2 +1,19 @@
-package vuluu.fileservice.dto.request;public class ListUserGetImgRequestDTO {
+package vuluu.fileservice.dto.request;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ListUserGetImgRequestDTO {
+
+  String postId;
+  String userId;
 }

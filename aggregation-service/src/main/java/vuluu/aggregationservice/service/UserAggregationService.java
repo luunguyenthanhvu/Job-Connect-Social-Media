@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import vuluu.aggregationservice.configuration.WebClientBuilder;
+import vuluu.aggregationservice.dto.pageCustom.PageCustomResponseDTO;
 import vuluu.aggregationservice.dto.response.ApiResponse;
+import vuluu.aggregationservice.dto.response.JobPostListResponseDTO;
 import vuluu.aggregationservice.dto.response.UserResponseDTO;
 import vuluu.aggregationservice.exception.AppException;
 import vuluu.aggregationservice.exception.ErrorCode;
@@ -59,4 +61,5 @@ public class UserAggregationService {
           return Mono.error(new AppException(ErrorCode.USER_NOT_CHOSE_TYPE));
         });
   }
+
 }

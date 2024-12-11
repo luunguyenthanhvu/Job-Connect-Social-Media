@@ -1,5 +1,7 @@
 package vuluu.fileservice.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -7,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vuluu.fileservice.dto.request.ListUserGetImgRequestDTO;
 import vuluu.fileservice.dto.request.UserProfileUploadRequestDTO;
+import vuluu.fileservice.dto.response.ListUserWithImgResponseDTO;
 import vuluu.fileservice.entity.Image;
 import vuluu.fileservice.exception.AppException;
 import vuluu.fileservice.exception.ErrorCode;
@@ -26,7 +30,7 @@ public class ImageService {
 
   // Phương thức tìm kiếm hình ảnh theo userId hoặc postId
   // Redis Cacheable check cho file dữ liệu
-  @Cacheable(value = "fileInfoCache", key = "'file:' + #userId", unless = "#result == null")
+  @Cacheable(value = "fileInfoCache", key = "'file:' + #userId + #postId", unless = "#result == null")
   public String searchImages(String postId) {
     String userId = myUtils.getUserId();
     log.error("tìm ảnh");
@@ -50,6 +54,30 @@ public class ImageService {
     }
   }
 
+  public List<ListUserWithImgResponseDTO> searchUserImages(
+      List<ListUserGetImgRequestDTO> requestDTO) {
+    log.error("tìm với userID");
+    var response = new ArrayList<ListUserWithImgResponseDTO>();
+    return null;
+  }
+
+  @Cacheable(value = "fileInfoCache", key = "'file:' + #userId", unless = "#result == null")
+  public ListUserWithImgResponseDTO getUserImg(String userId) {
+    Image imageList = imageRepository.findFirstByUserIdOrderByIdDesc(userId);
+
+    // Kiểm tra danh sách ảnh có phần tử hay không
+    if (imageList != null) {
+      // Trả về URL ảnh đầu tiên từ danh sách
+      return ListUserWithImgResponseDTO
+          .builder()
+          .img(imageList.getImageUrl())
+          .build();
+    }
+    return ListUserWithImgResponseDTO
+        .builder()
+        .img("")
+        .build();
+  }
 
   @Transactional
   @Cacheable(value = "fileInfoCache", key = "'file:' + #userId", unless = "#result == null")

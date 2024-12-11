@@ -6,12 +6,13 @@ import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 import vuluu.postservice.dto.request.JobPostRequestDTO;
 import vuluu.postservice.dto.response.JobPostDetailResponseDTO;
+import vuluu.postservice.dto.response.JobPostListResponseDTO;
 import vuluu.postservice.dto.response.JobPostResponseDTO;
 import vuluu.postservice.entity.JobPost;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-12-09T00:44:58+0700",
+    date = "2024-12-11T16:11:03+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 17.0.9 (JetBrains s.r.o.)"
 )
 @Component
@@ -75,6 +76,23 @@ public class JobPostMapperImpl implements JobPostMapper {
         jobPostDetailResponseDTO.setExpirationDate( jobPost.getExpirationDate() );
 
         return jobPostDetailResponseDTO;
+    }
+
+    @Override
+    public JobPostListResponseDTO toJobPostListResponseDTO(JobPost jobPost) {
+        if ( jobPost == null ) {
+            return null;
+        }
+
+        JobPostListResponseDTO jobPostListResponseDTO = new JobPostListResponseDTO();
+
+        jobPostListResponseDTO.setId( jobPost.getId() );
+        jobPostListResponseDTO.setTitle( jobPost.getTitle() );
+        jobPostListResponseDTO.setUserId( jobPost.getUserId() );
+        jobPostListResponseDTO.setAddressId( jobPost.getAddressId() );
+        jobPostListResponseDTO.setPostedDate( jobPost.getPostedDate() );
+
+        return jobPostListResponseDTO;
     }
 
     @Override

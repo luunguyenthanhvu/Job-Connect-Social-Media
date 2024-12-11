@@ -5,6 +5,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -12,6 +17,7 @@ import vuluu.postservice.dto.request.JobApplyRequestDTO;
 import vuluu.postservice.dto.request.JobPostRequestDTO;
 import vuluu.postservice.dto.request.JobSkillExtractRequestDTO;
 import vuluu.postservice.dto.response.JobPostDetailResponseDTO;
+import vuluu.postservice.dto.response.JobPostListResponseDTO;
 import vuluu.postservice.dto.response.JobPostResponseDTO;
 import vuluu.postservice.dto.response.JobSkillExtractResponseDTO;
 import vuluu.postservice.dto.response.MessageResponseDTO;
@@ -21,6 +27,7 @@ import vuluu.postservice.exception.AppException;
 import vuluu.postservice.exception.ErrorCode;
 import vuluu.postservice.mapper.JobPostMapper;
 import vuluu.postservice.repository.ApplicationRepository;
+import vuluu.postservice.repository.JobPostPagingRepository;
 import vuluu.postservice.repository.JobPostRepository;
 import vuluu.postservice.util.MyUtils;
 
@@ -35,9 +42,11 @@ public class JobPostService {
   MyUtils myUtils;
   ApplicationRepository applicationRepository;
   RestTemplate restTemplate;
+  JobPostPagingRepository jobPostPagingRepository;
   private final String targetUrl = "http://127.0.0.1:8090/extract_description";
 
   @Transactional
+  @CacheEvict(value = "jobPosts", allEntries = true)
   public JobPostResponseDTO postJob(JobPostRequestDTO requestDTO) {
     // get user Id from jwt token filter
     String userId = myUtils.getUserId();
@@ -116,5 +125,12 @@ public class JobPostService {
     } else {
       System.out.println("Không có phản hồi từ server");
     }
+  }
+
+  @Cacheable(value = "jobPosts", key = "'page:' + #page + ':size:' + #size")
+  public Page<JobPostListResponseDTO> getJobPostPage(int page, int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    Page<JobPost> jobPosts = jobPostPagingRepository.findAllBy(pageable);
+    return jobPosts.map(jobPostMapper::toJobPostListResponseDTO);
   }
 }

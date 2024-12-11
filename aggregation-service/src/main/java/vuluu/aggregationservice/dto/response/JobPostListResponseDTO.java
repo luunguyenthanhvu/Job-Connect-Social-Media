@@ -1,4 +1,4 @@
-package vuluu.postservice.dto.response;
+package vuluu.aggregationservice.dto.response;
 
 import java.io.Serializable;
 import java.util.Date;

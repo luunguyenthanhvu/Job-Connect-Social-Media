@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import vuluu.fileservice.entity.Image;
@@ -33,6 +34,7 @@ public class CloudinaryService {
         "api_secret", apiSecret));
   }
 
+  @CacheEvict(value = "jobPosts", key = "#userId")
   public String uploadImage(MultipartFile file, String postId,
       EImageType type) throws IOException {
     // Upload the image to Cloudinary
