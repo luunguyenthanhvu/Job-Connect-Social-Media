@@ -27,6 +27,7 @@ import vuluu.notificationservice.repository.httpclient.EmailClients;
 public class EmailService {
 
   EmailClients emailClient;
+
   @Value("${app.bravo.api-key}")
   @NonFinal
   String apiKeyPath;

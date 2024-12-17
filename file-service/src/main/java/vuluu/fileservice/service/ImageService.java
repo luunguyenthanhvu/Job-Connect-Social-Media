@@ -58,7 +58,15 @@ public class ImageService {
       List<ListUserGetImgRequestDTO> requestDTO) {
     log.error("tìm với userID");
     var response = new ArrayList<ListUserWithImgResponseDTO>();
-    return null;
+    requestDTO.forEach(request -> {
+      var img = getUserImg(request.getUserId());
+      response.add(ListUserWithImgResponseDTO
+          .builder()
+          .img(img.getImg())
+          .postId(request.getPostId())
+          .build());
+    });
+    return response;
   }
 
   @Cacheable(value = "fileInfoCache", key = "'file:' + #userId", unless = "#result == null")

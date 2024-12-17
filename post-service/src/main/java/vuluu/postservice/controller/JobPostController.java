@@ -44,7 +44,6 @@ public class JobPostController {
         .result(jobPostService.getJobDetail(jobId)).build();
   }
 
-  @PreAuthorize("hasRole('EMPLOYER') or hasRole('USER')")
   @GetMapping("/get/company-job/{companyId}")
   public ApiResponse<List<JobPostResponseDTO>> getListCompanyJob(@PathVariable String companyId) {
     return ApiResponse.<List<JobPostResponseDTO>>builder()
@@ -58,8 +57,7 @@ public class JobPostController {
         .build();
   }
 
-  @GetMapping("/list")
-  @PreAuthorize("hasRole('USER')")
+  @GetMapping("/get/list")
   public ApiResponse<Page<JobPostListResponseDTO>> getPageJobPost(
       @RequestParam(name = "page", defaultValue = "0") int page,
       @RequestParam(name = "size", defaultValue = "10") int size) {

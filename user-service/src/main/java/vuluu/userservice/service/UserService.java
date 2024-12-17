@@ -191,11 +191,11 @@ public class UserService {
       String userId, Long addressId) {
 
     // Ensure userId and addressId are found
-    var usernameOptional = userRepository.findUsernameById(userId);
+    var userOptional = userRepository.findById(userId);
     var addressOptional = addressRepository.findById(addressId);
 
-    if (usernameOptional.isPresent() && addressOptional.isPresent()) {
-      var username = usernameOptional.get();
+    if (userOptional.isPresent() && addressOptional.isPresent()) {
+      var username = userOptional.get().getUsername();
       var address = addressOptional.get().getAddressDescription();
 
       return JobPostEmployerInfoAddressResponseDTO.builder()
