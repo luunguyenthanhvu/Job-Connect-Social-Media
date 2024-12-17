@@ -1,5 +1,8 @@
 package vuluu.aggregationservice.service;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +10,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import vuluu.aggregationservice.configuration.WebClientBuilder;
 import vuluu.aggregationservice.dto.pageCustom.PageCustomResponseDTO;
+import vuluu.aggregationservice.dto.request.EmployerInfoWithAddressRequestDTO;
+import vuluu.aggregationservice.dto.request.ListUserGetImgRequestDTO;
 import vuluu.aggregationservice.dto.response.ApiResponse;
+import vuluu.aggregationservice.dto.response.EnrichedJobPostResponseDTO;
+import vuluu.aggregationservice.dto.response.JobPostEmployerInfoAddressResponseDTO;
 import vuluu.aggregationservice.dto.response.JobPostListResponseDTO;
+import vuluu.aggregationservice.dto.response.ListUserWithImgResponseDTO;
+import vuluu.aggregationservice.repository.FileClient;
+import vuluu.aggregationservice.repository.PostClient;
+import vuluu.aggregationservice.repository.UserClient;
 
 @Service
 @RequiredArgsConstructor
@@ -35,8 +47,83 @@ public class PostAggregationService {
     this.fWebClient = webClient;
   }
 
-  public Mono<ApiResponse<PageCustomResponseDTO<JobPostListResponseDTO>>> getPageJobPost(int page,
-      int size) {
-    return null;
+  public Mono<ApiResponse<PageCustomResponseDTO<EnrichedJobPostResponseDTO>>> getPageJobPost(
+      int page, int size) {
+    // Gọi service lấy danh sách công việc
+    Mono<ApiResponse<PageCustomResponseDTO<JobPostListResponseDTO>>> jobPostResponseMono =
+        WebClientBuilder.createClient(pWebClient, PostClient.class)
+            .getPageJobPost(page, size);
+
+    return jobPostResponseMono.flatMap(jobPostResponse -> {
+      List<JobPostListResponseDTO> jobs = jobPostResponse.getResult().getContent();
+
+      // Chuẩn bị dữ liệu request cho từng service
+      List<ListUserGetImgRequestDTO> userImgRequests = jobs.stream()
+          .map(job -> new ListUserGetImgRequestDTO(job.getId().toString(), job.getUserId()))
+          .collect(Collectors.toList());
+
+      List<EmployerInfoWithAddressRequestDTO> employerRequests = jobs.stream()
+          .map(job -> new EmployerInfoWithAddressRequestDTO(job.getId().toString(), job.getUserId(),
+              Long.valueOf(job.getAddressId())))
+          .collect(Collectors.toList());
+
+      // Gọi API batch
+      Mono<List<ListUserWithImgResponseDTO>> userImagesMono = WebClientBuilder.createClient(
+              fWebClient, FileClient.class)
+          .getUserImage(userImgRequests)
+          .map(ApiResponse::getResult);
+
+      Mono<List<JobPostEmployerInfoAddressResponseDTO>> employerInfoMono = WebClientBuilder.createClient(
+              uWebClient, UserClient.class)
+          .getEmployerWithAddress(employerRequests)
+          .map(ApiResponse::getResult);
+
+      // Kết hợp kết quả từ các service
+      return Mono.zip(userImagesMono, employerInfoMono).map(tuple -> {
+        List<ListUserWithImgResponseDTO> userImages = tuple.getT1();
+        List<JobPostEmployerInfoAddressResponseDTO> employerInfos = tuple.getT2();
+
+        // Map dữ liệu trả về vào danh sách enriched jobs
+        Map<String, String> userImageMap = userImages.stream()
+            .collect(Collectors.toMap(ListUserWithImgResponseDTO::getPostId,
+                ListUserWithImgResponseDTO::getImg));
+
+        Map<String, JobPostEmployerInfoAddressResponseDTO> employerInfoMap = employerInfos.stream()
+            .collect(
+                Collectors.toMap(JobPostEmployerInfoAddressResponseDTO::getPostId, info -> info));
+
+        List<EnrichedJobPostResponseDTO> enrichedJobs = jobs.stream()
+            .map(job -> EnrichedJobPostResponseDTO.builder()
+                .id(job.getId())
+                .title(job.getTitle())
+                .userId(job.getUserId())
+                .addressId(job.getAddressId())
+                .postedDate(job.getPostedDate())
+                .avatarUrl(userImageMap.getOrDefault(job.getId().toString(), ""))
+                .username(employerInfoMap.get(job.getId().toString()).getUsername())
+                .address(employerInfoMap.get(job.getId().toString()).getAddress())
+                .build()
+            ).collect(Collectors.toList());
+
+        // Tạo response chứa dữ liệu enriched
+        PageCustomResponseDTO<EnrichedJobPostResponseDTO> enrichedPage = PageCustomResponseDTO.<EnrichedJobPostResponseDTO>builder()
+            .content(enrichedJobs)
+            .pageable(jobPostResponse.getResult().getPageable())
+            .totalPages(jobPostResponse.getResult().getTotalPages())
+            .totalElements(jobPostResponse.getResult().getTotalElements())
+            .size(jobPostResponse.getResult().getSize())
+            .number(jobPostResponse.getResult().getNumber())
+            .sort(jobPostResponse.getResult().getSort())
+            .first(jobPostResponse.getResult().isFirst())
+            .last(jobPostResponse.getResult().isLast())
+            .numberOfElements(jobPostResponse.getResult().getNumberOfElements())
+            .empty(jobPostResponse.getResult().isEmpty())
+            .build();
+
+        return ApiResponse.<PageCustomResponseDTO<EnrichedJobPostResponseDTO>>builder()
+            .result(enrichedPage).build();
+      });
+    });
   }
+
 }

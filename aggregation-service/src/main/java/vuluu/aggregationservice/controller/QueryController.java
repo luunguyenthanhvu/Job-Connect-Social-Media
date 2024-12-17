@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import vuluu.aggregationservice.dto.pageCustom.PageCustomResponseDTO;
 import vuluu.aggregationservice.dto.response.ApiResponse;
-import vuluu.aggregationservice.dto.response.JobPostListResponseDTO;
+import vuluu.aggregationservice.dto.response.EnrichedJobPostResponseDTO;
 import vuluu.aggregationservice.dto.response.UserResponseDTO;
 import vuluu.aggregationservice.service.PostAggregationService;
 import vuluu.aggregationservice.service.UserAggregationService;
@@ -31,7 +31,7 @@ public class QueryController {
   }
 
   @GetMapping("/job-list")
-  public Mono<ApiResponse<PageCustomResponseDTO<JobPostListResponseDTO>>> getPageJobPost(
+  public Mono<ApiResponse<PageCustomResponseDTO<EnrichedJobPostResponseDTO>>> getPageJobPost(
       @RequestParam(name = "page", defaultValue = "0") int page,
       @RequestParam(name = "size", defaultValue = "10") int size) {
     return postAggregationService.getPageJobPost(page, size);
