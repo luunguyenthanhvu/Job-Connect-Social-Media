@@ -26,7 +26,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
   String[] PUBLIC_ENDPOINTS = {"/auth/token", "/auth/resend-verify-code",
-      "/auth/registration", "/auth/verify", "/auth/reset-password"};
+      "/auth/registration", "/auth/verify", "/auth/reset-password",
+      "/users/get-employer-info-with-address"};
 
   CustomJwtDecoder customJwtDecoder;
 
