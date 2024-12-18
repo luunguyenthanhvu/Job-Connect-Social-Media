@@ -1,5 +1,6 @@
 package vuluu.aggregationservice.service;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,6 +54,7 @@ public class PostAggregationService {
     Mono<ApiResponse<PageCustomResponseDTO<JobPostListResponseDTO>>> jobPostResponseMono =
         WebClientBuilder.createClient(pWebClient, PostClient.class)
             .getPageJobPost(page, size);
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
     return jobPostResponseMono.flatMap(jobPostResponse -> {
       List<JobPostListResponseDTO> jobs = jobPostResponse.getResult().getContent();
@@ -93,16 +95,20 @@ public class PostAggregationService {
                 Collectors.toMap(JobPostEmployerInfoAddressResponseDTO::getPostId, info -> info));
 
         List<EnrichedJobPostResponseDTO> enrichedJobs = jobs.stream()
-            .map(job -> EnrichedJobPostResponseDTO.builder()
-                .id(job.getId())
-                .title(job.getTitle())
-                .userId(job.getUserId())
-                .addressId(job.getAddressId())
-                .postedDate(job.getPostedDate())
-                .avatarUrl(userImageMap.getOrDefault(job.getId().toString(), ""))
-                .username(employerInfoMap.get(job.getId().toString()).getUsername())
-                .address(employerInfoMap.get(job.getId().toString()).getAddress())
-                .build()
+            .map(job -> {
+                  String formattedDate = (job.getPostedDate() != null) ?
+                      formatter.format(job.getPostedDate()) : "N/A";
+                  return EnrichedJobPostResponseDTO.builder()
+                      .id(job.getId())
+                      .title(job.getTitle())
+                      .userId(job.getUserId())
+                      .addressId(job.getAddressId())
+                      .postedDate(formattedDate)
+                      .avatarUrl(userImageMap.getOrDefault(job.getId().toString(), ""))
+                      .username(employerInfoMap.get(job.getId().toString()).getUsername())
+                      .address(employerInfoMap.get(job.getId().toString()).getAddress())
+                      .build();
+                }
             ).collect(Collectors.toList());
 
         // Tạo response chứa dữ liệu enriched

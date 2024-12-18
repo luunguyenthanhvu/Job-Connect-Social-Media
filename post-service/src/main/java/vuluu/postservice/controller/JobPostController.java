@@ -39,13 +39,14 @@ public class JobPostController {
 
   @PreAuthorize("hasRole('EMPLOYER') or hasRole('USER')")
   @GetMapping("/get/job-detail/{jobId}")
-  public ApiResponse<JobPostDetailResponseDTO> getJobPostDetail(@PathVariable Long jobId) {
+  public ApiResponse<JobPostDetailResponseDTO> getJobPostDetail(@PathVariable("jobId") Long jobId) {
     return ApiResponse.<JobPostDetailResponseDTO>builder()
         .result(jobPostService.getJobDetail(jobId)).build();
   }
 
   @GetMapping("/get/company-job/{companyId}")
-  public ApiResponse<List<JobPostResponseDTO>> getListCompanyJob(@PathVariable String companyId) {
+  public ApiResponse<List<JobPostResponseDTO>> getListCompanyJob(
+      @PathVariable("companyId") String companyId) {
     return ApiResponse.<List<JobPostResponseDTO>>builder()
         .result(jobPostService.getListCompanyJob(companyId)).build();
   }
