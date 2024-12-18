@@ -1,7 +1,6 @@
 package vuluu.aggregationservice.dto.response;
 
 import java.io.Serializable;
-import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,5 +22,5 @@ public class EnrichedJobPostResponseDTO implements Serializable {
   String addressId;
   String avatarUrl;
   String address;
-  Date postedDate;
+  String postedDate;
 }
