@@ -1,6 +1,7 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 from database import connect_db
+import datetime
 
 def find_matching_jobs(user_id):
     conn = connect_db()
@@ -33,14 +34,32 @@ def find_matching_jobs(user_id):
     conn.commit()
     conn.close()
 
-def find_matching_user(job_id):
 
-    # Kết nối cơ sở dữ liệu và lưu công việc
+def find_matching_user(job_id):
+    """Find users matching the required skills for a given job."""
+    # Kết nối cơ sở dữ liệu
     conn = connect_db()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT required_skills FROM Jobs WHERE post_id = %s', (job_id,))
-    required_skills =  cursor.fetchone()[0]
+    # Lấy thông tin về công việc, bao gồm kỹ năng yêu cầu và ngày hết hạn
+    cursor.execute('SELECT required_skills, expiration_date FROM Jobs WHERE post_id = %s', (job_id,))
+    job_data = cursor.fetchone()
+
+    if not job_data:
+        conn.commit()
+        conn.close()
+        return None  # Công việc không tồn tại
+
+    required_skills = job_data[0]
+    expiration_date = job_data[1]
+
+    # Kiểm tra xem công việc đã hết hạn chưa
+    current_date = datetime.date.today()
+    if expiration_date < current_date:
+        print(f"Job {job_id} has expired.")
+        conn.commit()
+        conn.close()
+        return None  # Công việc đã hết hạn
 
     # Lấy danh sách tất cả ứng viên và kỹ năng của họ
     cursor.execute('SELECT user_id, skills FROM Users')

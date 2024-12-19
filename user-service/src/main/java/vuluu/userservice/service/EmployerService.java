@@ -37,7 +37,7 @@ public class EmployerService {
   UploadImageProducer uploadImageProducer;
 
   @Transactional
-  @CacheEvict(value = "userInfoCache", key = "'userInfo:' + #userId")
+ // @CacheEvict(value = "userInfoCache", key = "'userInfo:' + #userId")
   public MessageResponseDTO createEmployerAccount(
       CreateAccountEmployerRequestDTO requestDTO) {
     String userId = myUtils.getUserId();

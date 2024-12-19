@@ -1,5 +1,6 @@
 package vuluu.postservice.dto.request;
 
+import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,4 +17,5 @@ public class JobSkillExtractRequestDTO {
 
   Long jobId;
   String jobDescription;
+  Date expirationDate;
 }

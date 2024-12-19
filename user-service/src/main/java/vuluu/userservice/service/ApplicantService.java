@@ -47,7 +47,6 @@ public class ApplicantService {
   private final String targetUrl = "http://127.0.0.1:8090/extract_user_skill";
 
   @Transactional
-  @CacheEvict(value = "userInfoCache", key = "'userInfo:' + #userId")
   public MessageResponseDTO createApplicantAccount(CreateAccountApplicantRequestDTO requestDTO) {
     String userId = myUtils.getUserId();
 

@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Job-Connect-Social-Media.iml" filepath="$PROJECT_DIR$/.idea/Job-Connect-Social-Media.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/websocket-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/websocket-service.main.iml" />
     </modules>
   </component>
 </project>

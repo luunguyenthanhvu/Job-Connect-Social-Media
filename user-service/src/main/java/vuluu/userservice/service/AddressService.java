@@ -7,8 +7,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +29,7 @@ public class AddressService {
   UserRepository userRepository;
 
   @Transactional
-  @CacheEvict(value = "userAddressCache", key = "'userAddressCache:' + #userId")
+  //@CacheEvict(value = "userAddressCache", key = "'userAddressCache:' + #userId")
   public void saveListAddress(String[] listAddress) {
     String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     var user = userRepository.findById(userId)
@@ -44,7 +42,7 @@ public class AddressService {
   }
 
   @Transactional
-  @CacheEvict(value = "userAddressCache", key = "'userAddressCache:' + #userId")
+  // @CacheEvict(value = "userAddressCache", key = "'userAddressCache:' + #userId")
   public MessageResponseDTO saveAddress(CreateAddressRequestDTO requestDTO) {
     String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     var user = userRepository.findById(userId)
@@ -55,7 +53,7 @@ public class AddressService {
     return MessageResponseDTO.builder().message("Address created successfully.").build();
   }
 
-  @Cacheable(value = "userAddressCache", key = "'userAddressCache:' + #userId", unless = "#result == null")
+  //@Cacheable(value = "userAddressCache", key = "'userAddressCache:' + #userId", unless = "#result == null")
   public List<ListAddressResponseDTO> getUserAddress() {
     String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

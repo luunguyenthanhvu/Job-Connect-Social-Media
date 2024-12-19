@@ -120,7 +120,7 @@ public class UserService {
 
   // Phương thức tìm kiếm hình ảnh theo userId hoặc postId
   // Redis Cacheable check cho file dữ liệu
-  @Cacheable(value = "userInfoCache", key = "'userInfo:' + #userId", unless = "#result == null")
+  //@Cacheable(value = "userInfoCache", key = "'userInfo:' + #userId", unless = "#result == null")
   public UserResponseDTO getUser() {
     String userId = myUtils.getUserId();
     System.out.println("Kiểm tra user");
@@ -185,8 +185,8 @@ public class UserService {
     return response;
   }
 
-  @Cacheable(value = "employerInfoWithAddressCache",
-      key = "'employerInfoWithAddress:' + #userId + #addressId", unless = "#result == null")
+//  @Cacheable(value = "employerInfoWithAddressCache",
+//      key = "'employerInfoWithAddress:' + #userId + #addressId", unless = "#result == null")
   public JobPostEmployerInfoAddressResponseDTO getListEmployerInfoWithAddress(
       String userId, Long addressId) {
 

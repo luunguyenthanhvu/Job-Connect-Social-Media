@@ -46,7 +46,7 @@ public class JobPostService {
   private final String targetUrl = "http://127.0.0.1:8090/extract_description";
 
   @Transactional
-  @CacheEvict(value = "jobPosts", allEntries = true)
+//  @CacheEvict(value = "jobPosts", allEntries = true)
   public JobPostResponseDTO postJob(JobPostRequestDTO requestDTO) {
     // get user Id from jwt token filter
     String userId = myUtils.getUserId();
@@ -59,13 +59,17 @@ public class JobPostService {
     // post job data to extract service
     sendPostRequest(JobSkillExtractRequestDTO.builder()
         .jobId(jobPost.getId())
+        .expirationDate(requestDTO.getExpirationDate())
         .jobDescription(jobPost.getJobExpertise())
         .build());
 
     return jobPostMapper.toJobPostResponseDTO(jobPost);
   }
 
+//  @Cacheable(value = "jobPostCaches",
+//      key = "'JobPost:' + #jobId", unless = "#result == null")
   public JobPostDetailResponseDTO getJobDetail(Long jobId) {
+    System.out.println("In ra job id" + jobId);
     // get user Id
     String userId = myUtils.getUserId();
 
@@ -74,10 +78,11 @@ public class JobPostService {
 
     // check if user applied this job
     boolean isApplied = applicationRepository.existsByJobAndApplicantId(job, userId);
-    var response = jobPostMapper.toJobPostDetailResponseDTO(job);
-    response.setApplied(isApplied);
 
-    return jobPostMapper.toJobPostDetailResponseDTO(job);
+    var response = jobPostMapper.toJobPostDetailResponseDTO(job);
+    response.setApplied(isApplied);  // Set the applied flag
+    System.out.println(response);
+    return response;  // Return the updated response object
   }
 
   public List<JobPostResponseDTO> getListCompanyJob(String userId) {
@@ -127,7 +132,7 @@ public class JobPostService {
     }
   }
 
-  @Cacheable(value = "jobPosts", key = "'page:' + #page + ':size:' + #size")
+//  @Cacheable(value = "jobPosts", key = "'page:' + #page + ':size:' + #size")
   public Page<JobPostListResponseDTO> getJobPostPage(int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
     Page<JobPost> jobPosts = jobPostPagingRepository.findAllBy(pageable);

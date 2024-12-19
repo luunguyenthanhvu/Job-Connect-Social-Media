@@ -1,0 +1,32 @@
+server:
+  port: 8087
+  servlet:
+    context-path: /websocket-service
+
+spring:
+  application:
+    name: websocket-service
+
+  kafka:
+    bootstrap-servers: "${HOST_IP_ADDRESS:localhost}:19092,${HOST_IP_ADDRESS:localhost}:29092,${HOST_IP_ADDRESS:localhost}:39092"
+    consumer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      auto-offset-reset: earliest
+      group-id: notification-group
+    topics:
+      suggest-job-user: SUGGEST_JOB
+      user-matching: MATCHING_USER
+  devtools:
+    restart:
+      enabled: false
+    remote:
+      enabled: false
+eureka:
+  client:
+    server-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
