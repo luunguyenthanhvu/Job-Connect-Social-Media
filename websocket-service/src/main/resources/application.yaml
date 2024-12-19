@@ -22,6 +22,7 @@ spring:
       enabled: false
     remote:
       enabled: false
+
 eureka:
   client:
     server-url:

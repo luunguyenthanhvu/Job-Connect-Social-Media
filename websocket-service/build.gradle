@@ -29,6 +29,11 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.1"
+    }
+}
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'  // WebSocket starter
@@ -36,15 +41,10 @@ dependencies {
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
-    // MapStruct dependencies
-    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
-    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
-
-    // Spring Kafka (optional)
     implementation 'org.springframework.kafka:spring-kafka'
 
-    // Spring Cloud OpenFeign (optional)
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.3'
+    // Eureka Client
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
     // Testing dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
