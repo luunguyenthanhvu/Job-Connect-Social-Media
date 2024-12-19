@@ -60,3 +60,10 @@ spring:
             - Path=${app.api-prefix}/aggregation-service/**
           filters:
             - StripPrefix=${app.strip-prefix}
+
+        - id: websocket-service
+          uri: lb://websocket-service  # Sử dụng Eureka để phát hiện dịch vụ websocket-service
+          predicates:
+            - Path=${app.api-prefix}/websocket-service/**
+          filters:
+            - StripPrefix=${app.strip-prefix}
