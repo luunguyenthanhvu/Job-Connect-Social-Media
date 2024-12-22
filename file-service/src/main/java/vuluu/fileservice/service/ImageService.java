@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vuluu.fileservice.dto.request.ListUserGetImgRequestDTO;
@@ -30,7 +29,7 @@ public class ImageService {
 
   // Phương thức tìm kiếm hình ảnh theo userId hoặc postId
   // Redis Cacheable check cho file dữ liệu
-  @Cacheable(value = "fileInfoCache", key = "'file:' + #userId + #postId", unless = "#result == null")
+//  @Cacheable(value = "fileInfoCache", key = "'file:' + #userId + #postId", unless = "#result == null")
   public String searchImages(String postId) {
     String userId = myUtils.getUserId();
     log.error("tìm ảnh");
@@ -69,7 +68,7 @@ public class ImageService {
     return response;
   }
 
-  @Cacheable(value = "fileInfoCache", key = "'file:' + #userId", unless = "#result == null")
+  //  @Cacheable(value = "fileInfoCache", key = "'file:' + #userId", unless = "#result == null")
   public ListUserWithImgResponseDTO getUserImg(String userId) {
     Image imageList = imageRepository.findFirstByUserIdOrderByIdDesc(userId);
 
@@ -88,7 +87,7 @@ public class ImageService {
   }
 
   @Transactional
-  @Cacheable(value = "fileInfoCache", key = "'file:' + #userId", unless = "#result == null")
+  //@Cacheable(value = "fileInfoCache", key = "'file:' + #userId", unless = "#result == null")
   public void uploadImageWithByte(UserProfileUploadRequestDTO requestDTO) {
     String userId = requestDTO.getUserId();
     try {

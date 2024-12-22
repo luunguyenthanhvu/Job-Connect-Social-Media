@@ -2,7 +2,7 @@ import pymysql
 from mysql.connector import Error
 
 def connect_db():
-
+    """Establish a connection to the database."""
     try:
         connection = pymysql.connect(
             host="127.0.0.1",
@@ -25,22 +25,23 @@ def create_tables():
 
     try:
         cursor = conn.cursor()
-        cursor.execute('''
+        cursor.execute(''' 
             CREATE TABLE IF NOT EXISTS Users (
                 user_id VARCHAR(50) PRIMARY KEY,
                 skills TEXT
             )
         ''')
 
-        cursor.execute('''
+        cursor.execute(''' 
             CREATE TABLE IF NOT EXISTS Jobs (
                 job_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                 required_skills TEXT,
-                post_id VARCHAR(50)
+                post_id VARCHAR(50),
+                expiration_date DATE  -- New column for expiration date
             )
         ''')
 
-        cursor.execute('''
+        cursor.execute(''' 
             CREATE TABLE IF NOT EXISTS Skill_Match (
                 match_id INT AUTO_INCREMENT PRIMARY KEY,
                 user_id VARCHAR(50),
@@ -75,7 +76,7 @@ def save_user(user_id, skills):
         cursor.close()
         conn.close()
 
-def save_job(required_skills, post_id):
+def save_job(required_skills, post_id, expiration_date):
     """Save a job into the Jobs table, updating if post_id already exists."""
     conn = connect_db()
     if conn is None:
@@ -94,9 +95,9 @@ def save_job(required_skills, post_id):
             cursor.execute('DELETE FROM Jobs WHERE post_id = %s', (post_id,))
             print(f"Deleted existing job with post_id: {post_id}")
 
-        # Insert the new job record
-        cursor.execute('INSERT INTO Jobs (required_skills, post_id) VALUES (%s, %s)',
-                       (required_skills, post_id))
+        # Insert the new job record, including the expiration_date
+        cursor.execute('INSERT INTO Jobs (required_skills, post_id, expiration_date) VALUES (%s, %s, %s)',
+                       (required_skills, post_id, expiration_date))
         conn.commit()
         print(f"Inserted new job with post_id: {post_id}")
 
@@ -109,4 +110,3 @@ def save_job(required_skills, post_id):
 # Example usage
 if __name__ == "__main__":
     create_tables()
-

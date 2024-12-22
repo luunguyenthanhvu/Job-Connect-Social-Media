@@ -46,11 +46,11 @@ def extract_and_save_skills_user(user_id, cv_text, model=None, dictionary=None):
     extracted_skills = extract_keywords(cv_text, model, dictionary)
     save_user(user_id, ', '.join(extracted_skills))
 
-def extract_and_save_skills_job(job_id, job_description, model=None, dictionary=None):
+def extract_and_save_skills_job(job_id, job_description,expirationDate, model=None, dictionary=None):
     if model is None or dictionary is None:
         # Load default model if not provided
         model = LdaModel.load("C:\\Users\\PC\\Desktop\\Models\\model_lda_100.model")
         dictionary = corpora.Dictionary.load("C:\\Users\\PC\\Desktop\\Models\\model_lda_100.model.id2word")
 
     extracted_skills = extract_keywords(job_description, model, dictionary)
-    save_job(', '.join(extracted_skills),job_id)
+    save_job(', '.join(extracted_skills),job_id, expirationDate)

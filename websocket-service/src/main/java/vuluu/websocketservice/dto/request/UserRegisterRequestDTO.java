@@ -1,6 +1,6 @@
-package vuluu.postservice.dto.request;
+package vuluu.websocketservice.dto.request;
 
-import java.util.Date;
+import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,13 +9,11 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JobSkillExtractRequestDTO {
+public class UserRegisterRequestDTO implements Serializable {
 
-  Long jobId;
-  String jobDescription;
-  Date expirationDate;
+  String userId;
 }
