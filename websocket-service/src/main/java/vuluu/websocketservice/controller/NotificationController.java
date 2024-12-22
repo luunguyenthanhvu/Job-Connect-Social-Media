@@ -12,14 +12,13 @@ import vuluu.websocketservice.dto.request.UserRegisterRequestDTO;
 @RequiredArgsConstructor
 public class NotificationController {
 
-
   @MessageMapping("/user.addUser")
   @SendTo("/user/topic")
   public void test(@Payload UserRegisterRequestDTO requestDTO,
       SimpMessageHeaderAccessor headerAccessor) {
     String userId = requestDTO.getUserId();  // Giả sử bạn có trường userId trong requestDTO
-    String message = "User connected: " + userId;
+    String message = "User connected: " + userId + " session : " + headerAccessor.getSessionId();
+    System.out.println(message);
     headerAccessor.getSessionAttributes().put("userId", userId);
-
   }
 }
