@@ -26,4 +26,6 @@ post-service:
   domain: lb://post-service
 user-service:
   domain: lb://user-service
+notification-service:
+  domain: lb://notification-service
 

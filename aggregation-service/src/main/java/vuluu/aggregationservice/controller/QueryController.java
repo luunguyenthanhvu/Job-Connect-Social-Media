@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono;
 import vuluu.aggregationservice.dto.pageCustom.PageCustomResponseDTO;
 import vuluu.aggregationservice.dto.response.ApiResponse;
 import vuluu.aggregationservice.dto.response.EnrichedJobPostResponseDTO;
+import vuluu.aggregationservice.dto.response.NotifyListResponseDTO;
 import vuluu.aggregationservice.dto.response.UserResponseDTO;
 import vuluu.aggregationservice.service.PostAggregationService;
 import vuluu.aggregationservice.service.UserAggregationService;
@@ -35,6 +36,12 @@ public class QueryController {
       @RequestParam(name = "page", defaultValue = "0") int page,
       @RequestParam(name = "size", defaultValue = "10") int size) {
     return postAggregationService.getPageJobPost(page, size);
+  }
+
+  @GetMapping("/notify-list")
+  public Mono<ApiResponse<NotifyListResponseDTO>> getNotificationList(
+      @RequestParam("userId") String userId) {
+    return null;
   }
 
 }

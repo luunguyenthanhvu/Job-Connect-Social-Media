@@ -1,7 +1,8 @@
 package vuluu.notificationservice.enums;
 
 public enum ETypeNotify {
-  INFO("INFO"), WARNING("WARNING"), ERROR("ERROR");
+  INFO("INFO"), WARNING("WARNING"), ERROR("ERROR"),
+  SUGGEST_JOB("SUGGEST_JOB");
   private final String text;
 
   private ETypeNotify(String text) {

@@ -44,7 +44,7 @@ spring:
       password:
 
 cloudinary:
-  cloud_name: dter3mlpl
+  cloud_name: thongancut
   api_key: 414516658961459
   api_secret: xMDwskmSYks12oKGmkFXmXNrDmI
 

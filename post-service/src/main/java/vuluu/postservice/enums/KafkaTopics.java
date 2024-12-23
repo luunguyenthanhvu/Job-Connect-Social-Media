@@ -3,8 +3,8 @@ package vuluu.postservice.enums;
 public enum KafkaTopics {
   ONBOARD_SUCCESSFUL("onboard-successful"),
   USER_REGISTER("user-register"),
-  SUGGEST_JOB("suggest-job-user"),
   MATCHING_USER("user-matching"),
+  NOTIFY_USER("notify-user"),
   RESET_PASSWORD("reset-password");
 
   private final String topicName;

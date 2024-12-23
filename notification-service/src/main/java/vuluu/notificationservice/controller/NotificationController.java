@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import vuluu.notificationservice.dto.response.ApiResponse;
+import vuluu.notificationservice.dto.response.UserNotificationResponseDTO;
 import vuluu.notificationservice.entity.Notification;
-import vuluu.notificationservice.entity.UserNotification;
 import vuluu.notificationservice.service.NotificationService;
 
 @RestController
@@ -28,10 +29,10 @@ public class NotificationController {
 
   // Lấy tất cả thông báo của một user
   @GetMapping("/{userId}")
-  public ResponseEntity<List<UserNotification>> getNotificationsForUser(
+  public ApiResponse<List<UserNotificationResponseDTO>> getNotificationsForUser(
       @PathVariable String userId) {
-    List<UserNotification> notifications = notificationService.getNotificationsForUser(userId);
-    return ResponseEntity.ok(notifications);
+    return ApiResponse.<List<UserNotificationResponseDTO>>builder()
+        .result(notificationService.getNotificationsForUser(userId)).build();
   }
 
   // Đánh dấu thông báo là đã đọc

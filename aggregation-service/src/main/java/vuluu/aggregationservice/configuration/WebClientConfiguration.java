@@ -21,6 +21,8 @@ public class WebClientConfiguration {
   private String postServiceBaseURI;
   @Value("${file-service.domain}")
   private String fileServiceBaseURI;
+  @Value("${file-service.domain}")
+  private String notifyServiceBaseURI;
 
   @Bean
   @LoadBalanced
@@ -36,7 +38,7 @@ public class WebClientConfiguration {
               if (jwt != null) {
                 // Thêm JWT vào header Authorization của yêu cầu
                 ClientRequest modifiedRequest = ClientRequest.from(clientRequest)
-                    .header(HttpHeaders.AUTHORIZATION,  jwt)
+                    .header(HttpHeaders.AUTHORIZATION, jwt)
                     .build();
                 return Mono.just(modifiedRequest);
               }
@@ -59,6 +61,11 @@ public class WebClientConfiguration {
   @Bean(value = "fileWebClient")
   public WebClient fileWebClient(WebClient.Builder builder) {
     return createWebClient(builder, fileServiceBaseURI);
+  }
+
+  @Bean(value = "notifyWebClient")
+  public WebClient notifyWebClient(WebClient.Builder builder) {
+    return createWebClient(builder, notifyServiceBaseURI);
   }
 
   private WebClient createWebClient(WebClient.Builder builder, String baseURI) {

@@ -4,13 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +26,7 @@ import vuluu.notificationservice.enums.ETypeNotify;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity(name = "user_notification") // Tên bảng hợp lệ
+@Entity(name = "user_notification")
 public class UserNotification implements Serializable {
 
   @Id
@@ -34,20 +34,18 @@ public class UserNotification implements Serializable {
   @Column(name = "id")
   Long id;
 
-  @Column(name = "user_id", nullable = false)
+  @Column(name = "userId", nullable = false)
   String userId;
 
-  @ManyToOne
-  @JoinColumn(name = "notification_id", nullable = false)
+  @OneToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "notificationId", referencedColumnName = "id")
   Notification notification;
 
   @Column(name = "type", nullable = false)
   @Enumerated(EnumType.STRING)
   ETypeNotify type;
 
-  @Column(name = "read_at")
-  LocalDateTime readAt;
 
-  @Column(name = "is_read", nullable = false)
+  @Column(name = "isRead", nullable = false)
   boolean isRead;
 }
