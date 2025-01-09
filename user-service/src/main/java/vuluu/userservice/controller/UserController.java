@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vuluu.userservice.dto.request.EmployerInfoWithAddressRequestDTO;
+import vuluu.userservice.dto.request.ListUserNameRequestDTO;
 import vuluu.userservice.dto.response.ApiResponse;
 import vuluu.userservice.dto.response.JobPostEmployerInfoAddressResponseDTO;
+import vuluu.userservice.dto.response.UserNameWithPostResponseDTO;
 import vuluu.userservice.dto.response.UserResponseDTO;
 import vuluu.userservice.repository.UserRepository;
 import vuluu.userservice.service.UserService;
@@ -47,6 +49,13 @@ public class UserController {
       @RequestBody List<EmployerInfoWithAddressRequestDTO> requestDTO) {
     return ApiResponse.<List<JobPostEmployerInfoAddressResponseDTO>>builder()
         .result(userService.getEmployerWithAddress(requestDTO)).build();
+  }
+
+  @PostMapping("/get-user-name-with-post")
+  ApiResponse<List<UserNameWithPostResponseDTO>> getUserNameWithPost(
+      @RequestBody List<ListUserNameRequestDTO> requestDTO) {
+    return ApiResponse.<List<UserNameWithPostResponseDTO>>builder()
+        .result(userService.getUserNameWithPost(requestDTO)).build();
   }
 
 }

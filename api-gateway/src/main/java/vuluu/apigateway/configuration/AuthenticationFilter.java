@@ -39,6 +39,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
       "/user-service/users/get-employer-info-with-address",
       "/identity-service/identity/introspect", "/post-service/job/get/.*",
       "/aggregation-service/query/job-list",
+      "/websocket-service/.*",
   };
 
   @Value("${app.api-prefix}")

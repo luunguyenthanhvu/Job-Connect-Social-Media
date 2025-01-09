@@ -13,10 +13,9 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       auto-offset-reset: earliest
-      group-id: notification-group
+      group-id: websocket-group
     topics:
-      suggest-job-user: SUGGEST_JOB
-      user-matching: MATCHING_USER
+      notify-user: NOTIFY_USER
   devtools:
     restart:
       enabled: false

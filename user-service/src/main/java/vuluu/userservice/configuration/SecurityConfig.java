@@ -27,7 +27,8 @@ public class SecurityConfig {
 
   String[] PUBLIC_ENDPOINTS = {"/auth/token", "/auth/resend-verify-code",
       "/auth/registration", "/auth/verify", "/auth/reset-password",
-      "/users/get-employer-info-with-address"};
+      "/users/get-employer-info-with-address",
+      "/get-user-name-with-post"};
 
   CustomJwtDecoder customJwtDecoder;
 

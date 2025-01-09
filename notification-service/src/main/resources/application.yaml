@@ -11,7 +11,18 @@ app:
 spring:
   application:
     name: notification-service
-
+  datasource:
+    url: "jdbc:mysql://localhost:3306/job-csm-notification-service"
+    driverClassName: "com.mysql.cj.jdbc.Driver"
+    username: root
+    password: 12345678
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
   kafka:
     bootstrap-servers: "${HOST_IP_ADDRESS:localhost}:19092,${HOST_IP_ADDRESS:localhost}:29092,${HOST_IP_ADDRESS:localhost}:39092"
     consumer:
@@ -19,9 +30,12 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       auto-offset-reset: earliest
       group-id: notification-group
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      auto-offset-reset: earliest
     topics:
       user-register: USER_REGISTER
-      suggest-job-user: SUGGEST_JOB
       user-matching: MATCHING_USER
       reset-password: RESET_PASSWORD
   devtools:

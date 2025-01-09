@@ -5,8 +5,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +27,7 @@ import vuluu.postservice.mapper.JobPostMapper;
 import vuluu.postservice.repository.ApplicationRepository;
 import vuluu.postservice.repository.JobPostPagingRepository;
 import vuluu.postservice.repository.JobPostRepository;
+import vuluu.postservice.service.kafka_producer.JobNotificationProducer;
 import vuluu.postservice.util.MyUtils;
 
 @Service
@@ -43,6 +42,7 @@ public class JobPostService {
   ApplicationRepository applicationRepository;
   RestTemplate restTemplate;
   JobPostPagingRepository jobPostPagingRepository;
+  JobNotificationProducer jobNotificationProducer;
   private final String targetUrl = "http://127.0.0.1:8090/extract_description";
 
   @Transactional
@@ -61,12 +61,12 @@ public class JobPostService {
         .jobId(jobPost.getId())
         .expirationDate(requestDTO.getExpirationDate())
         .jobDescription(jobPost.getJobExpertise())
-        .build());
+        .build(), jobPost.getTitle());
 
     return jobPostMapper.toJobPostResponseDTO(jobPost);
   }
 
-//  @Cacheable(value = "jobPostCaches",
+  //  @Cacheable(value = "jobPostCaches",
 //      key = "'JobPost:' + #jobId", unless = "#result == null")
   public JobPostDetailResponseDTO getJobDetail(Long jobId) {
     System.out.println("In ra job id" + jobId);
@@ -120,10 +120,13 @@ public class JobPostService {
     }
   }
 
-  public void sendPostRequest(JobSkillExtractRequestDTO jobDTO) {
+  public void sendPostRequest(JobSkillExtractRequestDTO jobDTO, String jobName) {
     JobSkillExtractResponseDTO response = restTemplate.postForObject(targetUrl, jobDTO,
         JobSkillExtractResponseDTO.class);
-
+    // dùng kafka gửi thông báo
+    response.setJobName(jobName);
+    jobNotificationProducer.notifyJobToUser(response);
+    System.out.println("Đây là các response nhạn đuọc" + response);
     // In ra phản hồi nhận được
     if (response != null) {
       System.out.println("Phản hồi nhận được: " + response);
@@ -132,7 +135,7 @@ public class JobPostService {
     }
   }
 
-//  @Cacheable(value = "jobPosts", key = "'page:' + #page + ':size:' + #size")
+  //  @Cacheable(value = "jobPosts", key = "'page:' + #page + ':size:' + #size")
   public Page<JobPostListResponseDTO> getJobPostPage(int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
     Page<JobPost> jobPosts = jobPostPagingRepository.findAllBy(pageable);

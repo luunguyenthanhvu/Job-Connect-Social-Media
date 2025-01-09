@@ -24,7 +24,7 @@ def find_matching_jobs(user_id):
 
     cosine_sim = linear_kernel(tfidf_matrix[0:1], tfidf_matrix[1:]).flatten()
 
-    threshold = 0.2  # Ngưỡng tương đồng (tùy chỉnh)
+    threshold = 0.7  # Ngưỡng tương đồng (tùy chỉnh)
     for idx, similarity in enumerate(cosine_sim):
         if similarity > threshold:
             job_id = jobs[idx][0]

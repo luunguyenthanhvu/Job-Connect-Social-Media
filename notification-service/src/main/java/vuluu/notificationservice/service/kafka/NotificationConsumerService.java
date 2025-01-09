@@ -9,9 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import vuluu.notificationservice.dto.request.SendEmailRequestDTO;
+import vuluu.notificationservice.dto.response.JobSkillExtractResponseDTO;
 import vuluu.notificationservice.exception.AppException;
 import vuluu.notificationservice.exception.ErrorCode;
 import vuluu.notificationservice.service.EmailService;
+import vuluu.notificationservice.service.NotificationService;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -20,6 +22,7 @@ import vuluu.notificationservice.service.EmailService;
 public class NotificationConsumerService {
 
   EmailService emailService;
+  NotificationService notificationService;
   ObjectMapper objectMapper;
 
   @KafkaListener(topics = "${spring.kafka.topics.user-register}", groupId = "${spring.kafka.consumer.group-id}")
@@ -46,13 +49,15 @@ public class NotificationConsumerService {
     emailService.sendEmailResetPass(requestDTO);
   }
 
-  @KafkaListener(topics = "${spring.kafka.topics.suggest-job-user}", groupId = "${spring.kafka.consumer.group-id}")
-  public void listenMatchingJob(String jsonMessage) {
-
-  }
-
   @KafkaListener(topics = "${spring.kafka.topics.user-matching}", groupId = "${spring.kafka.consumer.group-id}")
   public void listenMatchingUser(String jsonMessage) {
-
+    JobSkillExtractResponseDTO requestDTO = null;
+    try {
+      requestDTO = objectMapper.readValue(jsonMessage, JobSkillExtractResponseDTO.class);
+    } catch (JsonProcessingException e) {
+      throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
+    }
+    log.info(String.valueOf(requestDTO));
+    notificationService.sendSuggestJobToUsers(requestDTO);
   }
 }

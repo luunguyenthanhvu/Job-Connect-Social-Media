@@ -23,4 +23,5 @@ public class UserResponseDTO {
   String description;
   String img;
   Set<RoleResponseDTO> roles;
+  Integer notifications;
 }

@@ -74,6 +74,10 @@ public class JobPost implements Serializable {
   @Column(name = "expirationDate", nullable = false)
   private Date expirationDate;
 
+  @Column(name = "isValid")
+  @Default
+  private boolean isValid = true;
+
   @OneToMany(mappedBy = "job", fetch = FetchType.LAZY)
   Set<Application> applications;
 }
