@@ -1,6 +1,5 @@
-package vuluu.aggregationservice.dto.response;
+package vuluu.notificationservice.dto.request;
 
-import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,15 +12,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponseDTO {
+public class NotificationJobMatchingRequestDTO {
 
-  String id;
-  String username;
-  String email;
-  String phoneNumber;
-  boolean verified;
-  String description;
-  String img;
-  Set<RoleResponseDTO> roles;
-  Integer notifications;
+  Long id;
+  String jobId;
+  String[] matchingUsers;
+  String message;
 }

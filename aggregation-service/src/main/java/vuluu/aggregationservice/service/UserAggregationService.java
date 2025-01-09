@@ -8,13 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import vuluu.aggregationservice.configuration.WebClientBuilder;
-import vuluu.aggregationservice.dto.pageCustom.PageCustomResponseDTO;
 import vuluu.aggregationservice.dto.response.ApiResponse;
-import vuluu.aggregationservice.dto.response.JobPostListResponseDTO;
 import vuluu.aggregationservice.dto.response.UserResponseDTO;
 import vuluu.aggregationservice.exception.AppException;
 import vuluu.aggregationservice.exception.ErrorCode;
 import vuluu.aggregationservice.repository.FileClient;
+import vuluu.aggregationservice.repository.NotificationClient;
 import vuluu.aggregationservice.repository.UserClient;
 
 @Service
@@ -24,6 +23,7 @@ public class UserAggregationService {
 
   private WebClient uWebClient;
   private WebClient fWebClient;
+  private WebClient nWebClient;
 
 
   @Autowired
@@ -36,6 +36,11 @@ public class UserAggregationService {
     this.fWebClient = webClient;
   }
 
+  @Autowired
+  private void setNotificationWebClient(@Qualifier("notifyWebClient") WebClient webClient) {
+    this.nWebClient = webClient;
+  }
+
   public Mono<ApiResponse<UserResponseDTO>> getUserInfo(String postId) {
     // Gọi API từ userWebClient để lấy thông tin người dùng
     Mono<ApiResponse<UserResponseDTO>> userMono = WebClientBuilder.createClient(uWebClient,
@@ -46,13 +51,17 @@ public class UserAggregationService {
     Mono<ApiResponse<String>> userImage = WebClientBuilder.createClient(fWebClient,
         FileClient.class).getFileData("");
 
+    Mono<ApiResponse<Integer>> notifications = WebClientBuilder.createClient(nWebClient,
+        NotificationClient.class).getUserNotification();
+
     // Kết hợp dữ liệu từ cả hai nguồn
-    return Mono.zip(userMono, userImage)
+    return Mono.zip(userMono, userImage, notifications)
         .map(tuple -> {
           UserResponseDTO user = tuple.getT1().getResult();
           String imageUrl = tuple.getT2().getResult();
 
           user.setImg(imageUrl);
+          user.setNotifications(tuple.getT3().getResult());
 
           return new ApiResponse<>(200, "User info with image retrieved successfully", user);
         })

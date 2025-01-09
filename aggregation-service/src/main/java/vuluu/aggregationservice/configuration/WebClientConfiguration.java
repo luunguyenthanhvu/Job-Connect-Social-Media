@@ -21,7 +21,7 @@ public class WebClientConfiguration {
   private String postServiceBaseURI;
   @Value("${file-service.domain}")
   private String fileServiceBaseURI;
-  @Value("${file-service.domain}")
+  @Value("${notification-service.domain}")
   private String notifyServiceBaseURI;
 
   @Bean
