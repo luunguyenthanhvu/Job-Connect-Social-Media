@@ -16,7 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import vuluu.notificationservice.enums.EMessage;
 import vuluu.notificationservice.enums.ETypeNotify;
 
 @Builder
@@ -30,27 +29,24 @@ public class Notification implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
   Long id;
 
-  @Column(name = "message")
-  @Enumerated(EnumType.STRING)
-  EMessage message;
+  @Column(nullable = false)
+  String message;
 
-  @Column(name = "postId")
+  @Column(nullable = false)
   String postId;
 
-  @Column(name = "from")
-  String from; // this is for employer maybe?
-
-  @Column(name = "type")
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   ETypeNotify type;
 
-  @Column(name = "createAt")
+  @Column(nullable = false)
   LocalDateTime createAt;
 
-  @Column(name = "isGlobal")
-  boolean isGlobal;
+  @Column(name = "`from`")
+  String from;
 
+  @Column(nullable = false)
+  Boolean isGlobal;
 }

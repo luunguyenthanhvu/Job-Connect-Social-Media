@@ -1,4 +1,4 @@
-package vuluu.postservice.configuration;
+package vuluu.notificationservice.configuration;
 
 import com.nimbusds.jwt.SignedJWT;
 import java.text.ParseException;

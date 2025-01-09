@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import vuluu.notificationservice.enums.EMessage;
 import vuluu.notificationservice.enums.ETypeNotify;
 
 @Data
@@ -20,10 +19,10 @@ public class UserNotificationResponseDTO implements Serializable {
 
   Long id;
   String title;
-  EMessage message;
+  String message;
   ETypeNotify type;
   LocalDateTime createAt;
-  String from;
+  String fromId;
   String postId;
   boolean isRead;
 }

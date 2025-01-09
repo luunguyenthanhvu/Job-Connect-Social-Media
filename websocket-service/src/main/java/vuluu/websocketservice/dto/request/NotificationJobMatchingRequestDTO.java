@@ -1,4 +1,4 @@
-package vuluu.notificationservice.dto.request;
+package vuluu.websocketservice.dto.request;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,4 +18,5 @@ public class NotificationJobMatchingRequestDTO {
   String jobId;
   String[] matchingUsers;
   String message;
+  boolean isRead;
 }

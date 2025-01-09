@@ -1,4 +1,4 @@
-package vuluu.postservice.configuration;
+package vuluu.notificationservice.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -8,8 +8,9 @@ import java.io.IOException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import vuluu.postservice.dto.response.ApiResponse;
-import vuluu.postservice.exception.ErrorCode;
+import vuluu.notificationservice.dto.response.ApiResponse;
+import vuluu.notificationservice.exception.ErrorCode;
+
 
 /**
  * Custom implementation of AuthenticationEntryPoint to handle unauthorized requests. This class

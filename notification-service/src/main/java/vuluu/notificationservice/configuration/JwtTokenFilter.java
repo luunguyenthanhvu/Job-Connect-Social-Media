@@ -1,4 +1,4 @@
-package vuluu.postservice.configuration;
+package vuluu.notificationservice.configuration;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

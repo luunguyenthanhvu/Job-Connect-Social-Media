@@ -17,5 +17,6 @@ public class NotifyJobSkillExtractRequestDTO implements Serializable {
 
   Long id;
   String jobId;
+  String message;
   boolean isRead;
 }

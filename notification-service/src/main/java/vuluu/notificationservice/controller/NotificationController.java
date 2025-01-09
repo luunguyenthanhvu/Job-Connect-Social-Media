@@ -19,7 +19,7 @@ import vuluu.notificationservice.entity.Notification;
 import vuluu.notificationservice.service.NotificationService;
 
 @RestController
-@RequestMapping("/api/notifications")
+@RequestMapping("/notifications")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -28,11 +28,16 @@ public class NotificationController {
   private final NotificationService notificationService;
 
   // Lấy tất cả thông báo của một user
-  @GetMapping("/{userId}")
-  public ApiResponse<List<UserNotificationResponseDTO>> getNotificationsForUser(
-      @PathVariable String userId) {
+  @GetMapping("/count-user-notifications")
+  public ApiResponse<Integer> countNotificationNotRead() {
+    return ApiResponse.<Integer>builder()
+        .result(notificationService.countNotificationNotRead()).build();
+  }
+
+  @GetMapping("/user-notifications")
+  public ApiResponse<List<UserNotificationResponseDTO>> getNotificationsForUser() {
     return ApiResponse.<List<UserNotificationResponseDTO>>builder()
-        .result(notificationService.getNotificationsForUser(userId)).build();
+        .result(notificationService.getNotificationsForUser()).build();
   }
 
   // Đánh dấu thông báo là đã đọc

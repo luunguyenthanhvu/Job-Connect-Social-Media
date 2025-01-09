@@ -1,8 +1,8 @@
 package vuluu.notificationservice.enums;
 
 public enum EMessage {
-  SUGGEST_JOB("{0} has posted a job that matches your CV");
-
+  SUGGEST_JOB("{0} that matches your CV"),
+  APPLY_JOB("Applicant {0} has apply to {1}");
   private final String template;
 
   private EMessage(String template) {

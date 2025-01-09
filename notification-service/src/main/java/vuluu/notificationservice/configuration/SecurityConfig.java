@@ -1,4 +1,4 @@
-package vuluu.postservice.configuration;
+package vuluu.notificationservice.configuration;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

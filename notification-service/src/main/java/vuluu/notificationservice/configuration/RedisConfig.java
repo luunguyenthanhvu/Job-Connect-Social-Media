@@ -1,4 +1,4 @@
-package vuluu.postservice.configuration;
+package vuluu.notificationservice.configuration;
 
 import java.time.Duration;
 import org.springframework.cache.CacheManager;

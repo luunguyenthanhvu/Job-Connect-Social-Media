@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import vuluu.notificationservice.dto.request.NotifyJobSkillExtractResponseDTO;
+import vuluu.notificationservice.dto.request.NotificationJobMatchingRequestDTO;
 import vuluu.notificationservice.dto.response.JobSkillExtractResponseDTO;
 import vuluu.notificationservice.dto.response.UserNotificationResponseDTO;
 import vuluu.notificationservice.entity.Notification;
@@ -18,6 +18,7 @@ import vuluu.notificationservice.enums.ETypeNotify;
 import vuluu.notificationservice.repository.NotificationRepository;
 import vuluu.notificationservice.repository.UserNotificationRepository;
 import vuluu.notificationservice.service.kafka.NotificationProducerService;
+import vuluu.notificationservice.util.MyUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +29,10 @@ public class NotificationService {
   NotificationRepository notificationRepository;
   UserNotificationRepository userNotificationRepository;
   NotificationProducerService notificationProducerService;
+  MyUtils myUtils;
 
-  public List<UserNotificationResponseDTO> getNotificationsForUser(String userId) {
+  public List<UserNotificationResponseDTO> getNotificationsForUser() {
+    String userId = myUtils.getUserId();
     List<UserNotification> data = userNotificationRepository.findByUserId(userId);
     List<UserNotificationResponseDTO> responseDTOS = new ArrayList<>();
     data.forEach(d -> {
@@ -38,7 +41,7 @@ public class NotificationService {
           .id(d.getNotification().getId())
           .createAt(d.getNotification().getCreateAt())
           .isRead(d.isRead())
-          .from(d.getNotification().getFrom())
+          .fromId(d.getNotification().getFrom())
           .message(d.getNotification().getMessage())
           .postId(d.getNotification().getPostId())
           .type(d.getType())
@@ -49,6 +52,10 @@ public class NotificationService {
     return responseDTOS;
   }
 
+  public Integer countNotificationNotRead() {
+    String userId = myUtils.getUserId();
+    return userNotificationRepository.countUnreadNotifications(userId);
+  }
 
   public void markAsRead(Long userNotificationId) {
     UserNotification userNotification = userNotificationRepository.findById(userNotificationId)
@@ -78,9 +85,10 @@ public class NotificationService {
     // 1. Lưu thông báo chung vào bảng Notification
     Notification notification = Notification
         .builder()
-        .message(EMessage.SUGGEST_JOB)
+        .message(EMessage.SUGGEST_JOB.format(dto.getJobName()))
         .postId(dto.getJobId())
         .type(ETypeNotify.SUGGEST_JOB)
+        .from(dto.getFromId())
         .createAt(time)
         .isGlobal(true)
         .build();
@@ -88,7 +96,7 @@ public class NotificationService {
     notification = notificationRepository.save(notification);
 
     // 2. Tạo thông báo cho từng user trong matchingUsers
-    List<String> notificationList = new ArrayList<>();
+    List<UserNotification> notificationList = new ArrayList<>();
     for (String userId : dto.getMatchingUsers()) {
       UserNotification userNotification = UserNotification
           .builder()
@@ -97,18 +105,21 @@ public class NotificationService {
           .type(notification.getType())
           .isRead(false)
           .build();
-
-      userNotificationRepository.save(userNotification);
+      notificationList.add(userNotification);
     }
-
+    userNotificationRepository.saveAll(notificationList);
     // 3. Sau khi lưu dùng kafka gửi cho websocket service
-    NotifyJobSkillExtractResponseDTO data =
-        NotifyJobSkillExtractResponseDTO
+
+    NotificationJobMatchingRequestDTO data =
+        NotificationJobMatchingRequestDTO
             .builder()
             .id(notification.getId())
             .jobId(dto.getJobId())
+            .message(notification.getMessage())
             .matchingUsers(dto.getMatchingUsers())
+            .isRead(false)
             .build();
+
     notificationProducerService.notifyJobToUser(data);
 
   }
@@ -116,7 +127,6 @@ public class NotificationService {
 
   public void sendGlobalNotification(Notification notification) {
     notification.setCreateAt(LocalDateTime.now());
-    notification.setGlobal(true);
     notificationRepository.save(notification);
   }
 }

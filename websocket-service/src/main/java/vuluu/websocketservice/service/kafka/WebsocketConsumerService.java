@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import vuluu.websocketservice.dto.request.JobSkillExtractRequestDTO;
+import vuluu.websocketservice.dto.request.NotificationJobMatchingRequestDTO;
 import vuluu.websocketservice.dto.request.NotifyJobSkillExtractRequestDTO;
 import vuluu.websocketservice.enums.EWebSocketClient;
 import vuluu.websocketservice.exception.AppException;
@@ -28,9 +28,9 @@ public class WebsocketConsumerService {
 
   @KafkaListener(topics = "${spring.kafka.topics.notify-user}", groupId = "${spring.kafka.consumer.group-id}")
   public void listenMatchingJob(String jsonMessage) {
-    JobSkillExtractRequestDTO requestDTO = null;
+    NotificationJobMatchingRequestDTO requestDTO = null;
     try {
-      requestDTO = objectMapper.readValue(jsonMessage, JobSkillExtractRequestDTO.class);
+      requestDTO = objectMapper.readValue(jsonMessage, NotificationJobMatchingRequestDTO.class);
     } catch (JsonProcessingException e) {
       throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
     }
@@ -42,6 +42,7 @@ public class WebsocketConsumerService {
               .id(requestDTO.getId())
               .jobId(requestDTO.getJobId())
               .isRead(requestDTO.isRead())
+              .message(requestDTO.getMessage())
               .build();
       sendNotificationToUser(userId, data);
     }
