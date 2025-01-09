@@ -18,7 +18,6 @@ import vuluu.notificationservice.enums.ETypeNotify;
 public class UserNotificationResponseDTO implements Serializable {
 
   Long id;
-  String title;
   String message;
   ETypeNotify type;
   LocalDateTime createAt;

@@ -1,5 +1,6 @@
 package vuluu.aggregationservice.controller;
 
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -11,8 +12,10 @@ import reactor.core.publisher.Mono;
 import vuluu.aggregationservice.dto.pageCustom.PageCustomResponseDTO;
 import vuluu.aggregationservice.dto.response.ApiResponse;
 import vuluu.aggregationservice.dto.response.EnrichedJobPostResponseDTO;
+import vuluu.aggregationservice.dto.response.ListUserNotificationResponseDTO;
 import vuluu.aggregationservice.dto.response.NotifyListResponseDTO;
 import vuluu.aggregationservice.dto.response.UserResponseDTO;
+import vuluu.aggregationservice.service.NotificationAggregationService;
 import vuluu.aggregationservice.service.PostAggregationService;
 import vuluu.aggregationservice.service.UserAggregationService;
 
@@ -24,6 +27,7 @@ public class QueryController {
 
   UserAggregationService aggregationService;
   PostAggregationService postAggregationService;
+  NotificationAggregationService notificationAggregationService;
 
   @GetMapping("/user-basic-info")
   public Mono<ApiResponse<UserResponseDTO>> getUserById(
@@ -38,10 +42,9 @@ public class QueryController {
     return postAggregationService.getPageJobPost(page, size);
   }
 
-  @GetMapping("/notify-list")
-  public Mono<ApiResponse<NotifyListResponseDTO>> getNotificationList(
-      @RequestParam("userId") String userId) {
-    return null;
+  @GetMapping("/notifications-list")
+  public Mono<ApiResponse<List<ListUserNotificationResponseDTO>>> getNotificationList() {
+    return notificationAggregationService.getUserNotifications();
   }
 
 }

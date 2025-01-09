@@ -1,7 +1,6 @@
 package vuluu.aggregationservice.dto.response;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,13 +14,15 @@ import vuluu.aggregationservice.enums.ETypeNotify;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserNotificationResponseDTO implements Serializable {
+public class ListUserNotificationResponseDTO implements Serializable {
 
   Long id;
   String message;
   ETypeNotify type;
-  LocalDateTime createAt;
+  String createAt;
   String fromId;
   String postId;
   boolean isRead;
+  String userName;
+  String userImg;
 }

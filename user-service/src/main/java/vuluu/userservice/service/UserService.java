@@ -9,15 +9,16 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vuluu.userservice.dto.request.AccountVerifyRequestDTO;
 import vuluu.userservice.dto.request.CreateAccountRequestDTO;
 import vuluu.userservice.dto.request.EmployerInfoWithAddressRequestDTO;
+import vuluu.userservice.dto.request.ListUserNameRequestDTO;
 import vuluu.userservice.dto.response.JobPostEmployerInfoAddressResponseDTO;
 import vuluu.userservice.dto.response.MessageResponseDTO;
+import vuluu.userservice.dto.response.UserNameWithPostResponseDTO;
 import vuluu.userservice.dto.response.UserResponseDTO;
 import vuluu.userservice.entity.Role;
 import vuluu.userservice.entity.User;
@@ -185,7 +186,24 @@ public class UserService {
     return response;
   }
 
-//  @Cacheable(value = "employerInfoWithAddressCache",
+  public List<UserNameWithPostResponseDTO> getUserNameWithPost(
+      List<ListUserNameRequestDTO> requestDTO) {
+    var response = new ArrayList<UserNameWithPostResponseDTO>();
+    requestDTO.forEach(dto -> {
+      var user = userRepository.findById(dto.getUserId());
+      UserNameWithPostResponseDTO dtoResponse = UserNameWithPostResponseDTO
+          .builder()
+          .postId(dto.getPostId())
+          .userId(dto.getUserId())
+          .username(user.get().getUsername())
+          .build();
+
+      response.add(dtoResponse);
+    });
+    return response;
+  }
+
+  //  @Cacheable(value = "employerInfoWithAddressCache",
 //      key = "'employerInfoWithAddress:' + #userId + #addressId", unless = "#result == null")
   public JobPostEmployerInfoAddressResponseDTO getListEmployerInfoWithAddress(
       String userId, Long addressId) {
