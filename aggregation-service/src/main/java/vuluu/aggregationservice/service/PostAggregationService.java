@@ -17,6 +17,8 @@ import vuluu.aggregationservice.dto.request.EmployerInfoWithAddressRequestDTO;
 import vuluu.aggregationservice.dto.request.ListUserGetImgRequestDTO;
 import vuluu.aggregationservice.dto.response.ApiResponse;
 import vuluu.aggregationservice.dto.response.EnrichedJobPostResponseDTO;
+import vuluu.aggregationservice.dto.response.JobPostDetailsResponseCustomDTO;
+import vuluu.aggregationservice.dto.response.JobPostDetailsResponseDTO;
 import vuluu.aggregationservice.dto.response.JobPostEmployerInfoAddressResponseDTO;
 import vuluu.aggregationservice.dto.response.JobPostListResponseDTO;
 import vuluu.aggregationservice.dto.response.ListUserWithImgResponseDTO;
@@ -129,6 +131,65 @@ public class PostAggregationService {
         return ApiResponse.<PageCustomResponseDTO<EnrichedJobPostResponseDTO>>builder()
             .result(enrichedPage).build();
       });
+    });
+  }
+
+  public Mono<ApiResponse<JobPostDetailsResponseCustomDTO>> getJobPostDetails(Long id) {
+    Mono<ApiResponse<JobPostDetailsResponseDTO>> responseJob = WebClientBuilder.createClient(
+        pWebClient, PostClient.class).getJobDetails(id);
+
+    return responseJob.flatMap(data -> {
+      JobPostDetailsResponseDTO jobDetails = data.getResult();
+
+      ListUserGetImgRequestDTO requestImage = ListUserGetImgRequestDTO
+          .builder()
+          .userId(jobDetails.getUserId())
+          .postId(jobDetails.getId().toString())
+          .build();
+
+      EmployerInfoWithAddressRequestDTO requestUserInfo = EmployerInfoWithAddressRequestDTO
+          .builder()
+          .postId(jobDetails.getId().toString())
+          .userId(jobDetails.getUserId())
+          .addressId(Long.valueOf(jobDetails.getAddressId()))
+          .build();
+
+      // Gọi API batch
+      Mono<List<ListUserWithImgResponseDTO>> userImagesMono = WebClientBuilder.createClient(
+              fWebClient, FileClient.class)
+          .getUserImage(List.of(requestImage))
+          .map(ApiResponse::getResult);
+
+      Mono<List<JobPostEmployerInfoAddressResponseDTO>> employerInfoMono = WebClientBuilder.createClient(
+              uWebClient, UserClient.class)
+          .getEmployerWithAddress(List.of(requestUserInfo))
+          .map(ApiResponse::getResult);
+      // Kết hợp cả hai response lại thành một ApiResponse
+      return Mono.zip(userImagesMono, employerInfoMono)
+          .map(tuple -> {
+            ListUserWithImgResponseDTO imageResponse = tuple.getT1().get(0);
+            JobPostEmployerInfoAddressResponseDTO userInfoResponse = tuple.getT2().get(0);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            return ApiResponse.<JobPostDetailsResponseCustomDTO>builder()
+                .result(JobPostDetailsResponseCustomDTO.builder()
+                    .id(jobDetails.getId())
+                    .title(jobDetails.getTitle())
+                    .jobDescription(jobDetails.getJobDescription())
+                    .jobExpertise(jobDetails.getJobExpertise())
+                    .jobWelfare(jobDetails.getJobWelfare())
+                    .userId(jobDetails.getUserId())
+                    .addressId(jobDetails.getAddressId())
+                    .employmentType(jobDetails.getEmploymentType())
+                    .numberOfPositions(jobDetails.getNumberOfPositions())
+                    .postedDate(formatter.format(jobDetails.getPostedDate()))
+                    .expirationDate(formatter.format(jobDetails.getExpirationDate()))
+                    .isApplied(jobDetails.isApplied())
+                    .address(userInfoResponse.getAddress())
+                    .username(userInfoResponse.getUsername())
+                    .img(imageResponse.getImg())
+                    .build())
+                .build();
+          });
     });
   }
 
