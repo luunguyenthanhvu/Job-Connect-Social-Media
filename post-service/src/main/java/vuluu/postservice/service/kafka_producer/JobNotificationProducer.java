@@ -20,4 +20,8 @@ public class JobNotificationProducer {
   public void notifyJobToUser(JobSkillExtractResponseDTO data) {
     kafkaTemplate.send(String.valueOf(KafkaTopics.MATCHING_USER), data);
   }
+
+  public void notifyApplicantToEmployer(JobSkillExtractResponseDTO data) {
+    kafkaTemplate.send(String.valueOf(KafkaTopics.APPLICANT_APPLY_JOB), data);
+  }
 }
