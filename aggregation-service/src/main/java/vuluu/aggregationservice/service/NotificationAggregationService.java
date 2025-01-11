@@ -1,6 +1,6 @@
 package vuluu.aggregationservice.service;
 
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,7 +54,11 @@ public class NotificationAggregationService {
     return listNotifications.flatMap(listApiResponse -> {
       if (listApiResponse != null && listApiResponse.getResult() != null) {
         List<UserNotificationResponseDTO> notifications = listApiResponse.getResult();
+        if (notifications == null || notifications.isEmpty()) {
+          return Mono.just(new ApiResponse<>());
+        }
 
+        System.out.println(notifications);
         // Chuẩn bị dữ liệu request cho từng services
         List<ListUserGetImgRequestDTO> userImgRequests = notifications.stream()
             .map(notification -> new ListUserGetImgRequestDTO(notification.getId().toString(),
@@ -85,11 +89,12 @@ public class NotificationAggregationService {
               .collect(Collectors.toMap(ListUserWithImgResponseDTO::getPostId,
                   ListUserWithImgResponseDTO::getImg));
 
+
           Map<String, UserNameWithPostResponseDTO> userNameMap =
               userNames.stream()
                   .collect(Collectors.toMap(UserNameWithPostResponseDTO::getPostId, info -> info));
 
-          SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+          DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
           List<ListUserNotificationResponseDTO> enrichedNotifications = notifications.stream()
               .map(data -> {
                 return ListUserNotificationResponseDTO
@@ -101,8 +106,8 @@ public class NotificationAggregationService {
                     .fromId(data.getFromId())
                     .postId(data.getPostId())
                     .isRead(data.isRead())
-                    .userName(userNameMap.get(data.getFromId()).getUsername())
-                    .userImg(userImageMap.get(data.getFromId()))
+                    .userName(userNameMap.get(String.valueOf(data.getId())).getUsername())
+                    .userImg(userImageMap.get(String.valueOf(data.getId())))
                     .build();
               }).collect(Collectors.toList());
 

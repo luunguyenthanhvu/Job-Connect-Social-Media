@@ -189,8 +189,12 @@ public class UserService {
   public List<UserNameWithPostResponseDTO> getUserNameWithPost(
       List<ListUserNameRequestDTO> requestDTO) {
     var response = new ArrayList<UserNameWithPostResponseDTO>();
+    System.out.println(requestDTO);
     requestDTO.forEach(dto -> {
       var user = userRepository.findById(dto.getUserId());
+
+      System.out.println("user ne" + user.get().getUsername());
+
       UserNameWithPostResponseDTO dtoResponse = UserNameWithPostResponseDTO
           .builder()
           .postId(dto.getPostId())

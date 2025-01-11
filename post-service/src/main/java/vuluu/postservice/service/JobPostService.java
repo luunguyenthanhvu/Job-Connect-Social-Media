@@ -61,7 +61,7 @@ public class JobPostService {
         .jobId(jobPost.getId())
         .expirationDate(requestDTO.getExpirationDate())
         .jobDescription(jobPost.getJobExpertise())
-        .build(), jobPost.getTitle());
+        .build(), jobPost.getTitle(), userId);
 
     return jobPostMapper.toJobPostResponseDTO(jobPost);
   }
@@ -120,11 +120,12 @@ public class JobPostService {
     }
   }
 
-  public void sendPostRequest(JobSkillExtractRequestDTO jobDTO, String jobName) {
+  public void sendPostRequest(JobSkillExtractRequestDTO jobDTO, String jobName, String fromId) {
     JobSkillExtractResponseDTO response = restTemplate.postForObject(targetUrl, jobDTO,
         JobSkillExtractResponseDTO.class);
     // dùng kafka gửi thông báo
     response.setJobName(jobName);
+    response.setFromId(fromId);
     jobNotificationProducer.notifyJobToUser(response);
     System.out.println("Đây là các response nhạn đuọc" + response);
     // In ra phản hồi nhận được
