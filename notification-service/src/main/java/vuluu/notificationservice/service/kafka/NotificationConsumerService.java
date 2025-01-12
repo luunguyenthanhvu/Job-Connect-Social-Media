@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import vuluu.notificationservice.dto.request.ApplicantApplyJobRequestDTO;
 import vuluu.notificationservice.dto.request.SendEmailRequestDTO;
 import vuluu.notificationservice.dto.response.JobSkillExtractResponseDTO;
 import vuluu.notificationservice.exception.AppException;
@@ -59,5 +60,17 @@ public class NotificationConsumerService {
     }
     log.info(String.valueOf(requestDTO));
     notificationService.sendSuggestJobToUsers(requestDTO);
+  }
+
+  @KafkaListener(topics = "${spring.kafka.topics.apply-to-job}", groupId = "${spring.kafka.consumer.group-id}")
+  public void listenMApplyUser(String jsonMessage) {
+    ApplicantApplyJobRequestDTO requestDTO = null;
+    try {
+      requestDTO = objectMapper.readValue(jsonMessage, ApplicantApplyJobRequestDTO.class);
+    } catch (JsonProcessingException e) {
+      throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
+    }
+    log.info(String.valueOf(requestDTO));
+    notificationService.sendNotifyNewApplicants(requestDTO);
   }
 }

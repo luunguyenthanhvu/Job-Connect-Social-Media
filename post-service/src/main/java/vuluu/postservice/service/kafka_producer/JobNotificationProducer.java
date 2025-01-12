@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import vuluu.postservice.dto.request.ApplicantApplyJobRequestDTO;
 import vuluu.postservice.dto.response.JobSkillExtractResponseDTO;
 import vuluu.postservice.enums.KafkaTopics;
 
@@ -21,7 +22,7 @@ public class JobNotificationProducer {
     kafkaTemplate.send(String.valueOf(KafkaTopics.MATCHING_USER), data);
   }
 
-  public void notifyApplicantToEmployer(JobSkillExtractResponseDTO data) {
+  public void notifyApplicantToEmployer(ApplicantApplyJobRequestDTO data) {
     kafkaTemplate.send(String.valueOf(KafkaTopics.APPLICANT_APPLY_JOB), data);
   }
 }

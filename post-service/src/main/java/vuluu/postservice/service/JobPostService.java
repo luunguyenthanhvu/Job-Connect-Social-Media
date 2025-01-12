@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import vuluu.postservice.dto.request.ApplicantApplyJobRequestDTO;
 import vuluu.postservice.dto.request.JobApplyRequestDTO;
 import vuluu.postservice.dto.request.JobPostRequestDTO;
 import vuluu.postservice.dto.request.JobSkillExtractRequestDTO;
@@ -116,6 +117,16 @@ public class JobPostService {
           .build();
 
       applicationRepository.save(application);
+
+      // send to kafka
+      ApplicantApplyJobRequestDTO kafkaData = ApplicantApplyJobRequestDTO
+          .builder()
+          .jobId(job.getId())
+          .fromId(userId) // from user Id
+          .userId(job.getUserId()) // employer Id
+          .jobName(job.getTitle())
+          .build();
+      jobNotificationProducer.notifyApplicantToEmployer(kafkaData);
       return new MessageResponseDTO("You have successfully applied to the job.");
     }
   }

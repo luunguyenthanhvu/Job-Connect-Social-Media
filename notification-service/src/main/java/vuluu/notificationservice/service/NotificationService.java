@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import vuluu.notificationservice.dto.request.ApplicantApplyJobRequestDTO;
 import vuluu.notificationservice.dto.request.NotificationJobMatchingRequestDTO;
 import vuluu.notificationservice.dto.response.JobSkillExtractResponseDTO;
 import vuluu.notificationservice.dto.response.UserNotificationResponseDTO;
@@ -124,6 +125,46 @@ public class NotificationService {
 
   }
 
+  public void sendNotifyNewApplicants(ApplicantApplyJobRequestDTO dto) {
+    LocalDateTime time = LocalDateTime.now();
+
+    // 1. Lưu thông báo chung vào bảng Notification
+    Notification notification = Notification
+        .builder()
+        .message(EMessage.APPLY_JOB.format(dto.getJobName()))
+        .postId(dto.getJobId().toString())
+        .type(ETypeNotify.APPLY_JOB)
+        .from(dto.getFromId())
+        .createAt(time)
+        .isGlobal(false)
+        .build();
+
+    notification = notificationRepository.save(notification);
+
+    // 2. Tạo thông báo cho từng user trong matchingUsers
+    UserNotification userNotification = UserNotification
+        .builder()
+        .userId(dto.getUserId())
+        .notification(notification)
+        .type(notification.getType())
+        .isRead(false)
+        .build();
+    userNotificationRepository.save(userNotification);
+    // 3. Sau khi lưu dùng kafka gửi cho websocket service
+
+    NotificationJobMatchingRequestDTO data =
+        NotificationJobMatchingRequestDTO
+            .builder()
+            .id(notification.getId())
+            .jobId(dto.getJobId().toString())
+            .message(notification.getMessage())
+            .matchingUsers(new String[]{dto.getUserId()})
+            .isRead(false)
+            .build();
+
+    notificationProducerService.notifyJobToUser(data);
+
+  }
 
   public void sendGlobalNotification(Notification notification) {
     notification.setCreateAt(LocalDateTime.now());

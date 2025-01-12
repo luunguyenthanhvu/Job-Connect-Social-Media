@@ -38,6 +38,7 @@ spring:
       user-register: USER_REGISTER
       user-matching: MATCHING_USER
       reset-password: RESET_PASSWORD
+      apply-to-job: APPLICANT_APPLY_JOB
   devtools:
     restart:
       enabled: false
