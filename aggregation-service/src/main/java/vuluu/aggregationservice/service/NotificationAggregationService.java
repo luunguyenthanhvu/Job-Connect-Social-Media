@@ -1,6 +1,7 @@
 package vuluu.aggregationservice.service;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -109,7 +110,9 @@ public class NotificationAggregationService {
                     .userName(userNameMap.get(String.valueOf(data.getId())).getUsername())
                     .userImg(userImageMap.get(String.valueOf(data.getId())))
                     .build();
-              }).collect(Collectors.toList());
+              })
+              .sorted(Comparator.comparing(ListUserNotificationResponseDTO::getId).reversed())
+              .collect(Collectors.toList());
 
           // Trả về kết quả bao bọc trong ApiResponse
           return ApiResponse.<List<ListUserNotificationResponseDTO>>builder()
