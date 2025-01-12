@@ -146,7 +146,7 @@ public class NotificationService {
         .builder()
         .userId(dto.getUserId())
         .notification(notification)
-        .type(notification.getType())
+        .type(ETypeNotify.APPLY_JOB)
         .isRead(false)
         .build();
     userNotificationRepository.save(userNotification);
