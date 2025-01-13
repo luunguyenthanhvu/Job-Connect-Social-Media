@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -17,6 +16,7 @@ import vuluu.userservice.dto.request.EducationRequestDTO;
 import vuluu.userservice.dto.request.ProjectRequestDTO;
 import vuluu.userservice.dto.request.UserSkillExtractRequestDTO;
 import vuluu.userservice.dto.request.WorkExperienceRequestDTO;
+import vuluu.userservice.dto.response.ApplicantProfileResponseDTO;
 import vuluu.userservice.dto.response.MessageResponseDTO;
 import vuluu.userservice.entity.Applicant;
 import vuluu.userservice.entity.Education;
@@ -24,6 +24,7 @@ import vuluu.userservice.entity.Project;
 import vuluu.userservice.entity.WorkExperience;
 import vuluu.userservice.exception.AppException;
 import vuluu.userservice.exception.ErrorCode;
+import vuluu.userservice.mapper.ApplicantResponseDTOMapper;
 import vuluu.userservice.mapper.ToApplicantMapper;
 import vuluu.userservice.repository.ApplicantRepository;
 import vuluu.userservice.repository.EmployerRepository;
@@ -44,6 +45,7 @@ public class ApplicantService {
   MyUtils myUtils;
   UploadImageProducer uploadImageProducer;
   RestTemplate restTemplate;
+  ApplicantResponseDTOMapper applicantResponseDTOMapper;
   private final String targetUrl = "http://127.0.0.1:8090/extract_user_skill";
 
   @Transactional
@@ -156,5 +158,11 @@ public class ApplicantService {
     System.out.println("đang gửi request nè");
     // Gửi yêu cầu POST tới service khác và nhận phản hồi
     restTemplate.postForObject(targetUrl, userDTO, UserSkillExtractRequestDTO.class);
+  }
+
+  public ApplicantProfileResponseDTO getApplicantProfile(String id) {
+    var response = applicantRepository.findById(id)
+        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+    return applicantResponseDTOMapper.toApplicantProfileResponseDTO(response);
   }
 }

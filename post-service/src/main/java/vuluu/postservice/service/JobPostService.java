@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import vuluu.postservice.dto.request.ApplicantApplyJobRequestDTO;
 import vuluu.postservice.dto.request.JobApplyRequestDTO;
 import vuluu.postservice.dto.request.JobPostRequestDTO;
 import vuluu.postservice.dto.request.JobSkillExtractRequestDTO;
@@ -61,7 +62,7 @@ public class JobPostService {
         .jobId(jobPost.getId())
         .expirationDate(requestDTO.getExpirationDate())
         .jobDescription(jobPost.getJobExpertise())
-        .build(), jobPost.getTitle());
+        .build(), jobPost.getTitle(), userId);
 
     return jobPostMapper.toJobPostResponseDTO(jobPost);
   }
@@ -116,15 +117,26 @@ public class JobPostService {
           .build();
 
       applicationRepository.save(application);
+
+      // send to kafka
+      ApplicantApplyJobRequestDTO kafkaData = ApplicantApplyJobRequestDTO
+          .builder()
+          .jobId(job.getId())
+          .fromId(userId) // from user Id
+          .userId(job.getUserId()) // employer Id
+          .jobName(job.getTitle())
+          .build();
+      jobNotificationProducer.notifyApplicantToEmployer(kafkaData);
       return new MessageResponseDTO("You have successfully applied to the job.");
     }
   }
 
-  public void sendPostRequest(JobSkillExtractRequestDTO jobDTO, String jobName) {
+  public void sendPostRequest(JobSkillExtractRequestDTO jobDTO, String jobName, String fromId) {
     JobSkillExtractResponseDTO response = restTemplate.postForObject(targetUrl, jobDTO,
         JobSkillExtractResponseDTO.class);
     // dùng kafka gửi thông báo
     response.setJobName(jobName);
+    response.setFromId(fromId);
     jobNotificationProducer.notifyJobToUser(response);
     System.out.println("Đây là các response nhạn đuọc" + response);
     // In ra phản hồi nhận được

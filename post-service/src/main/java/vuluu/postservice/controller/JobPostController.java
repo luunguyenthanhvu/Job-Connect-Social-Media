@@ -9,7 +9,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,10 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import vuluu.postservice.dto.request.JobApplyRequestDTO;
 import vuluu.postservice.dto.request.JobPostRequestDTO;
 import vuluu.postservice.dto.response.ApiResponse;
+import vuluu.postservice.dto.response.ApplicantResponseDTO;
 import vuluu.postservice.dto.response.JobPostDetailResponseDTO;
 import vuluu.postservice.dto.response.JobPostListResponseDTO;
 import vuluu.postservice.dto.response.JobPostResponseDTO;
 import vuluu.postservice.dto.response.MessageResponseDTO;
+import vuluu.postservice.service.ApplicationService;
 import vuluu.postservice.service.JobPostService;
 
 @RestController
@@ -30,6 +31,7 @@ import vuluu.postservice.service.JobPostService;
 public class JobPostController {
 
   JobPostService jobPostService;
+  ApplicationService applicationService;
 
   @PreAuthorize("hasRole('EMPLOYER')")
   @PostMapping("/create")
@@ -66,5 +68,13 @@ public class JobPostController {
     return ApiResponse.<Page<JobPostListResponseDTO>>builder()
         .result(jobPostService.getJobPostPage(page, size))
         .build();
+  }
+
+  @PreAuthorize("hasRole('EMPLOYER')")
+  @GetMapping("/get/applicant/list/{postId}")
+  public ApiResponse<List<ApplicantResponseDTO>> getApplicantList(
+      @PathVariable("postId") Long postId) {
+    return ApiResponse.<List<ApplicantResponseDTO>>builder()
+        .result(applicationService.getApplicantsForJob(postId)).build();
   }
 }

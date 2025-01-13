@@ -1,12 +1,13 @@
-package vuluu.notificationservice.enums;
+package vuluu.websocketservice.enums;
 
 public enum KafkaTopics {
   ONBOARD_SUCCESSFUL("onboard-successful"),
   USER_REGISTER("user-register"),
-  SUGGEST_JOB("suggest-job-user"),
   MATCHING_USER("user-matching"),
-  RESET_PASSWORD("reset-password"),
-  UPLOAD_IMAGE("upload-image");
+  APPLICANT_APPLY_JOB("apply-to-job"),
+  NOTIFY_USER("notify-user"),
+  UPLOAD_IMAGE("upload-image"),
+  RESET_PASSWORD("reset-password");
 
   private final String topicName;
 
