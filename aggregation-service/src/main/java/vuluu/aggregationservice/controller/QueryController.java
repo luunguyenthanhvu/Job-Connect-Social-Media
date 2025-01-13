@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import vuluu.aggregationservice.dto.pageCustom.PageCustomResponseDTO;
 import vuluu.aggregationservice.dto.response.ApiResponse;
+import vuluu.aggregationservice.dto.response.ApplicantProfileResponseDTO;
+import vuluu.aggregationservice.dto.response.EmployerProfileRequestDTO;
 import vuluu.aggregationservice.dto.response.EnrichedJobPostResponseDTO;
 import vuluu.aggregationservice.dto.response.JobPostDetailsResponseCustomDTO;
-import vuluu.aggregationservice.dto.response.JobPostDetailsResponseDTO;
 import vuluu.aggregationservice.dto.response.ListUserNotificationResponseDTO;
 import vuluu.aggregationservice.dto.response.UserResponseDTO;
 import vuluu.aggregationservice.service.NotificationAggregationService;
@@ -53,6 +54,18 @@ public class QueryController {
   public Mono<ApiResponse<JobPostDetailsResponseCustomDTO>> getJobDetailById(
       @PathVariable("jobId") Long jobId) {
     return postAggregationService.getJobPostDetails(jobId);
+  }
+
+  @GetMapping("/applicant-details/{id}")
+  public Mono<ApiResponse<ApplicantProfileResponseDTO>> getApplicantProfile(
+      @PathVariable("id") String id) {
+    return userAggregationService.getApplicantProfile(id);
+  }
+
+  @GetMapping("/employer-details/{id}")
+  public Mono<ApiResponse<EmployerProfileRequestDTO>> getEmployerProfile(
+      @PathVariable("id") String id) {
+    return userAggregationService.getEmployerProfile(id);
   }
 
 }

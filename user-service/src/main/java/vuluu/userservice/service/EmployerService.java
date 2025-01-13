@@ -5,10 +5,10 @@ import java.util.Set;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vuluu.userservice.dto.request.CreateAccountEmployerRequestDTO;
+import vuluu.userservice.dto.response.EmployerProfileRequestDTO;
 import vuluu.userservice.dto.response.MessageResponseDTO;
 import vuluu.userservice.entity.Role;
 import vuluu.userservice.enums.ERole;
@@ -37,7 +37,7 @@ public class EmployerService {
   UploadImageProducer uploadImageProducer;
 
   @Transactional
- // @CacheEvict(value = "userInfoCache", key = "'userInfo:' + #userId")
+  // @CacheEvict(value = "userInfoCache", key = "'userInfo:' + #userId")
   public MessageResponseDTO createEmployerAccount(
       CreateAccountEmployerRequestDTO requestDTO) {
     String userId = myUtils.getUserId();
@@ -81,4 +81,21 @@ public class EmployerService {
 
     return MessageResponseDTO.builder().message("Employer create successfully").build();
   }
+
+  public EmployerProfileRequestDTO getEmployerProfile(String id) {
+    var employer = employerRepository.findById(id)
+        .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+    return EmployerProfileRequestDTO.builder()
+        .id(employer.getId())
+        .username(employer.getUser().getUsername())
+        .email(employer.getUser().getEmail())
+        .description(employer.getUser().getDescription())
+        .address(employer.getUser().getAddresses().toArray(new String[0]))
+        .website(employer.getUser().getWebsite())
+        .country(employer.getCountry())
+        .industry(employer.getIndustry())
+        .build();
+  }
+
 }

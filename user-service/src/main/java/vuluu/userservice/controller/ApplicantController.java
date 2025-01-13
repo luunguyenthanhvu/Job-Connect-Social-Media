@@ -28,15 +28,16 @@ public class ApplicantController {
 
   @PreAuthorize("hasRole('USER')")
   @PostMapping("/create")
-  public ApiResponse<MessageResponseDTO> createApplicantAccount(@RequestBody
-  CreateAccountApplicantRequestDTO requestDTO) {
+  public ApiResponse<MessageResponseDTO> createApplicantAccount(
+      @RequestBody CreateAccountApplicantRequestDTO requestDTO) {
     return ApiResponse.<MessageResponseDTO>builder()
         .result(applicantService.createApplicantAccount(requestDTO)).build();
   }
 
   @GetMapping("/get/applicant-profile/{id}")
-  public ApiResponse<ApplicantProfileResponseDTO> getApplicantProfile(@PathVariable("id")
-  String id) {
+  @PreAuthorize("hasRole('USER') or hasRole('EMPLOYER') or hasRole('ADMIN')")
+  public ApiResponse<ApplicantProfileResponseDTO> getApplicantProfile(
+      @PathVariable("id") String id) {
     return ApiResponse.<ApplicantProfileResponseDTO>builder()
         .result(applicantService.getApplicantProfile(id)).build();
   }
