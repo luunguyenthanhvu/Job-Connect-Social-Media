@@ -77,7 +77,7 @@ def find_matching_user(job_id):
 
     cosine_sim = linear_kernel(tfidf_matrix[0:1], tfidf_matrix[1:]).flatten()
 
-    threshold = 0.2  # Ngưỡng tương đồng (có thể tùy chỉnh)
+    threshold = 0.6 # Ngưỡng tương đồng (có thể tùy chỉnh)
     matching_users = [users[idx][0] for idx, similarity in enumerate(cosine_sim) if similarity > threshold]
 
     # Đóng kết nối CSDL
